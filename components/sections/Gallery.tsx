@@ -11,7 +11,7 @@ const Gallery = () => {
           </span>
           <Link href="">See more</Link>
         </div>
-        <div className="grid grid-cols-5 gap-5 mt-6">
+        <div className="grid grid-cols-1  md:grid-cols-5 gap-5 mt-6">
           <div className="bg-slate-300 rounded-4xl h-[300px] col-span-3"></div>
           <div className="bg-slate-300 rounded-4xl h-[300px] col-span-2"></div>
           <div className="bg-slate-300 rounded-4xl h-[300px] col-span-2"></div>
