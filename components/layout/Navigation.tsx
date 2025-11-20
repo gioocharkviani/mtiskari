@@ -38,7 +38,7 @@ const navigationItems: NavigationItem[] = [
 const Navigation = () => {
   return (
     <nav className="w-max">
-      <ul className="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-6">
+      <ul className="hidden md:flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-6">
         {navigationItems.map((item) => (
           <li key={item.id} className="list-none">
             <Link

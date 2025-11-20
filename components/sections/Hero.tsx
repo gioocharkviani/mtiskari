@@ -9,7 +9,7 @@ const Hero = () => {
         <Header />
       </div>
       <div className="w-full absolute  bottom-0  z-3 px-5 ">
-        <div className="w-full border-[3px] bg-white translate-y-[50px] h-[100px] backdrop-blur-md rounded-2xl p-2 h-100px shadow-lg">
+        <div className="w-full border-[3px] bg-white translate-y-[50px] min-h-[100px] backdrop-blur-md rounded-2xl p-2  shadow-lg">
           booking form
         </div>
       </div>
