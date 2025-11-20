@@ -1,3 +1,4 @@
+import Activites from "@/components/sections/Activites";
 import Gallery from "@/components/sections/Gallery";
 import Hero from "@/components/sections/Hero";
 
@@ -6,6 +7,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col w-full items-center justify-center">
       <Hero />
       <Gallery />
+      <Activites />
     </div>
   );
 }

@@ -2,8 +2,10 @@
 
 :root {
   --background: #ffffff;
-  --hero-background: url("/test.jpg");
+  --hero-background: url("/test2.jpg");
   --bg1-background: url("/bg1.jpg");
+  --bg2-background: url("/bg2.png");
+  --bg3-background: url("/bg3.png");
 }
 
 body {
@@ -18,7 +20,6 @@ html {
 .hero-section {
   background: var(--hero-background);
   background-size: cover;
-  background-position: top center;
 }
 .hero-bg-overlay {
   background-color: transparent;
@@ -30,4 +31,12 @@ html {
 
 .bg1 {
   background: var(--bg1-background);
+}
+.bg2 {
+  background: var(--bg2-background) bottom left no-repeat;
+  background-size: contain;
+}
+.bg3 {
+  background: var(--bg3-background) bottom right no-repeat;
+  background-size: contain;
 }
