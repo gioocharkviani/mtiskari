@@ -106,7 +106,7 @@ const Comfort = () => {
             Stay Amidst Comfort and Nature
           </span>
 
-          <div className="grid w-max grid-cols-1 md:grid-cols-2 my-14 gap-4 justify-items-center">
+          <div className="grid max-w-max grid-cols-1 md:grid-cols-2 my-14 gap-4 justify-items-center">
             {dummy.slice(0, 4).map((_, i) => (
               <ComfortCard key={i} data={_} />
             ))}
