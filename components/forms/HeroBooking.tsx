@@ -41,13 +41,13 @@ const HeroBooking = () => {
             whileFocus={{ scale: 1.05 }}
             type="date"
             placeholder="Check-in"
-            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#87986A]"
+            className="p-3 border w-full border-gray-300 rounded-lg focus:outline-none focus:border-[#87986A]"
           />
           <motion.input
             whileFocus={{ scale: 1.05 }}
             type="date"
             placeholder="Check-out"
-            className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#87986A]"
+            className="p-3 border w-full border-gray-300 rounded-lg focus:outline-none focus:border-[#87986A]"
           />
           <motion.select
             whileFocus={{ scale: 1.05 }}
