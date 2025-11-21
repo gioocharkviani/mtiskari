@@ -222,7 +222,7 @@ const Comfort = () => {
                   whileHover="hover"
                   whileTap="tap"
                   variants={buttonVariants}
-                  className="text-[#005e06] px-4 py-2 rounded-2xl bg-[#cdefcd] font-bold text-[16px] hover:bg-[#b8e0b8] transition-colors duration-300 block"
+                  className="text-[#041f06] px-4 py-2 rounded-2xl bg-[#cdefcd] font-bold text-[16px] hover:bg-[#b8e0b8] transition-colors duration-300 block"
                 >
                   {showAll ? "Show Less" : "See More Comforts"}
                 </motion.button>

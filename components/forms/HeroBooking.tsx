@@ -60,7 +60,7 @@ const HeroBooking = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-[#87986A] text-white p-3 rounded-lg font-semibold hover:bg-[#6b7a52] transition-colors duration-300"
+            className="bg-[#cdefcd] text-[#041f06] p-3 rounded-lg font-semibold hover:bg-[#6b7a52] transition-colors duration-300"
           >
             Check Availability
           </motion.button>
