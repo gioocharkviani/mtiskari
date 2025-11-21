@@ -23,7 +23,7 @@ const HeroBooking = () => {
 
   return (
     <motion.div
-      className="w-full max-w-[1500px] border-[3px] bg-white backdrop-blur-md rounded-2xl p-6 shadow-lg"
+      className="w-full max-w-[1500px] border-[3px] bg-white backdrop-blur-md rounded-2xl p-6 shadow-lg "
       initial="hidden"
       animate="visible"
       whileHover="hover"

@@ -1,7 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
+  --font-1: "Outfit", sans-serif;
   --hero-background: url("/hero-bg.jpg");
   --bg1-background: url("/bg1.jpg");
   --bg2-background: url("/bg2.png");
@@ -11,7 +13,7 @@
 body {
   background: var(--background);
   overflow-x: hidden;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-1);
 }
 
 html {

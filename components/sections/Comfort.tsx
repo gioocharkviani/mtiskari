@@ -1,6 +1,6 @@
 "use client";
 import ComfortCard from "../cards/ComfortCard";
-import image1 from "../../public/services/Adventure-Icon-7.png";
+import image1 from "../../public/services/1/Adventure-Icon-10.png";
 import { ComfortTypes } from "@/types";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useState } from "react";
@@ -179,7 +179,7 @@ const Comfort = () => {
         >
           <motion.span
             variants={titleVariants}
-            className="text-5xl font-bold text-center mb-8"
+            className="text-5xl font-extrabold text-center mb-8"
           >
             Stay Amidst Comfort and Nature
           </motion.span>

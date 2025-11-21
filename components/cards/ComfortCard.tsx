@@ -6,7 +6,7 @@ const ComfortCard = ({ data }: { data: ComfortTypes }) => {
     return num.toString().padStart(2, "0");
   };
   return (
-    <div className=" bg-white border-2  border-transparent hover:border-[#191d1326] drop-shadow-2xl flex flex-col rounded-lg p-5 w-full max-w-[700px] md:max-w-[400] h-[200px] transition-all duration-300 ease-in-out">
+    <div className=" bg-white border-2  overflow-hidden  border-transparent hover:border-[#191d1326] drop-shadow-2xl flex flex-col rounded-lg p-5 w-full max-w-[700px] md:max-w-[400] h-[200px] transition-all duration-300 ease-in-out">
       <div className="flex justify-between items-center gap-2">
         <Image src={data?.icon} width={40} height={40} alt="image1" />
         <span className="font-extrabold text-6xl text-[#87986A26]">

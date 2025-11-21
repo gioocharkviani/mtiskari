@@ -96,6 +96,7 @@ const buttonVariants: Variants = {
     transition: {
       duration: 0.5,
       ease: "easeOut",
+      delay: 0.6,
     },
   },
   hover: {
@@ -140,8 +141,8 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 
 const Gallery: React.FC = () => {
   return (
-    <div className="w-full flex justify-center">
-      <div className="max-w-[1500px] w-full px-5 pt-36 pb-10">
+    <div id="gallery" className="w-full flex bg-transparent! justify-center">
+      <div className="max-w-[1500px] w-full px-5  py-10">
         {/* Header Section */}
         <AnimatedSection className="flex w-full flex-col gap-3 items-center justify-center">
           <motion.span
