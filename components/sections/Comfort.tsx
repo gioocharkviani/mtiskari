@@ -86,16 +86,6 @@ const dummy: ComfortTypes[] = [
     descGe:
       "ბავშვები უვარგიშებენ ზედამხედველობის ქვეშ არსებულ აქტივობებს, თამაშებს და გართობას, ხოლო მშობლები ისვენებენ და უვარგიშებენ თავიანთ შვებულების დროს.",
   },
-  {
-    id: 9,
-    icon: image1,
-    titleEn: "Private Beach",
-    titleGe: "პირადი ნაპირი",
-    descEn:
-      "Access our exclusive private beach area with sun loungers, beach service, and crystal clear waters for the perfect day in paradise.",
-    descGe:
-      "გამოიყენეთ ჩვენი ექსკლუზიური პირადი ნაპირის ზონა მზის სავარძლებით, ნაპირის სერვისით და სუფთა ნათელი წყლებით სრულყოფილი დღისთვის სამოთხეში.",
-  },
 ];
 
 const Comfort = () => {
@@ -161,8 +151,8 @@ const Comfort = () => {
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.5,
-        delay: 0.5,
+        duration: 0.3,
+        delay: 0.3,
       },
     },
     hover: {
@@ -178,9 +168,8 @@ const Comfort = () => {
 
   return (
     <div className="w-full flex justify-center relative px-5">
-      <div className="bg2 opacity-[0.08] bg-fixed! bg-bottom-left absolute inset-0 bg-cover -z-10"></div>
-
-      <div className="w-full max-w-[1500px] flex flex-col mt-20 min-h-screen xl:min-h-max">
+      <div className="bg2  opacity-[0.08] bg-fixed! bg-bottom-left absolute inset-0 bg-cover -z-10"></div>
+      <div className="w-full pb-5 max-w-[1500px] flex flex-col mt-20 min-h-screen xl:min-h-max">
         <motion.div
           className="flex w-full justify-center items-center flex-col"
           initial="hidden"
@@ -227,15 +216,17 @@ const Comfort = () => {
               variants={buttonVariants}
               className="flex justify-center mt-4"
             >
-              <motion.button
-                onClick={() => setShowAll(!showAll)}
-                whileHover="hover"
-                whileTap="tap"
-                variants={buttonVariants}
-                className="text-[#005e06] px-4 py-2 rounded-2xl bg-[#cdefcd] font-bold text-[16px] hover:bg-[#b8e0b8] transition-colors duration-300 block"
-              >
-                {showAll ? "Show Less" : "See More Comforts"}
-              </motion.button>
+              {dummy.length > 4 && (
+                <motion.button
+                  onClick={() => setShowAll(!showAll)}
+                  whileHover="hover"
+                  whileTap="tap"
+                  variants={buttonVariants}
+                  className="text-[#005e06] px-4 py-2 rounded-2xl bg-[#cdefcd] font-bold text-[16px] hover:bg-[#b8e0b8] transition-colors duration-300 block"
+                >
+                  {showAll ? "Show Less" : "See More Comforts"}
+                </motion.button>
+              )}
             </motion.div>
           )}
         </motion.div>

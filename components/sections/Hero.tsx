@@ -1,15 +1,85 @@
+"use client";
 import HeroBooking from "../forms/HeroBooking";
 import Header from "../layout/Header";
+import { motion, Variants } from "framer-motion";
 
 const Hero = () => {
+  const backgroundVariants: Variants = {
+    hidden: {
+      scale: 1.1,
+      opacity: 0,
+    },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        duration: 1.5,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 1,
+        delay: 0.5,
+      },
+    },
+  };
+
   return (
-    <div className="w-full flex justify-center min-h-screen relative">
-      <div className="w-full h-full absolute hero-bg bg-position-[calc(100%+0px)_center]! bg-cover!  md:bg-center! z-1"></div>
-      <div className="hero-bg-overlay absolute z-2"></div>
+    <div className="w-full flex justify-center min-h-screen relative ">
+      {/* Animated Background */}
+      <motion.div
+        className="w-full h-full absolute hero-bg bg-position-[calc(100%+0px)_center]! bg-cover! md:bg-center! z-1"
+        variants={backgroundVariants}
+        initial="hidden"
+        animate="visible"
+      />
+
+      {/* Animated Overlay */}
+      <motion.div
+        className="hero-bg-overlay absolute z-2"
+        variants={overlayVariants}
+        initial="hidden"
+        animate="visible"
+      />
+
+      {/* Header */}
       <div className="absolute w-full z-3">
         <Header />
       </div>
-      <div className="w-full absolute  bottom-0 flex justify-center  z-3 px-5 ">
+
+      {/* Hero Content */}
+      <motion.div
+        className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-3 px-5 text-center"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.8 }}
+      >
+        <motion.h1
+          className="text-5xl md:text-7xl font-bold text-white mb-4"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.8 }}
+        >
+          Welcome to Mtiskari
+        </motion.h1>
+        <motion.p
+          className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+        >
+          Experience luxury amidst natures beauty
+        </motion.p>
+      </motion.div>
+
+      {/* Booking Form */}
+      <div className="w-full absolute bottom-0 flex justify-center z-3 px-5">
         <HeroBooking />
       </div>
     </div>
