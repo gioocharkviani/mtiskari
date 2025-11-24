@@ -167,7 +167,7 @@ const Comfort = () => {
   };
 
   return (
-    <div className="w-full flex justify-center relative px-5">
+    <section className="w-full flex justify-center relative px-5">
       <div className="bg2  opacity-[0.08] bg-fixed! bg-bottom-left absolute inset-0 bg-cover -z-10"></div>
       <div className="w-full pb-5 max-w-[1500px] flex flex-col mt-20 min-h-screen xl:min-h-max">
         <motion.div
@@ -231,7 +231,7 @@ const Comfort = () => {
           )}
         </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 

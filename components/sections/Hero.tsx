@@ -31,7 +31,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="w-full flex justify-center min-h-screen relative ">
+    <section className="w-full flex justify-center min-h-screen relative ">
       {/* Animated Background */}
       <motion.div
         className="w-full h-full absolute hero-bg bg-position-[calc(100%+0px)_center]! bg-cover! md:bg-center! z-1"
@@ -82,7 +82,7 @@ const Hero = () => {
       <div className="w-full absolute bottom-0 flex justify-center z-3 px-5">
         <HeroBooking />
       </div>
-    </div>
+    </section>
   );
 };
 

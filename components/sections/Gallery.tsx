@@ -141,7 +141,10 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 
 const Gallery: React.FC = () => {
   return (
-    <div id="gallery" className="w-full flex bg-transparent! justify-center">
+    <section
+      id="gallery"
+      className="w-full flex bg-transparent! justify-center"
+    >
       <div className="max-w-[1500px] w-full px-5  py-10">
         {/* Header Section */}
         <AnimatedSection className="flex w-full flex-col gap-3 items-center justify-center">
@@ -186,7 +189,7 @@ const Gallery: React.FC = () => {
           ))}
         </AnimatedSection>
       </div>
-    </div>
+    </section>
   );
 };
 

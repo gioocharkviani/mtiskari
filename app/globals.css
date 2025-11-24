@@ -2,7 +2,6 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
   --font-1: "Outfit", sans-serif;
   --hero-background: url("/hero-bg.jpg");
   --bg1-background: url("/bg1.jpg");
@@ -11,7 +10,6 @@
 }
 
 body {
-  background: var(--background);
   overflow-x: hidden;
   font-family: var(--font-1);
 }
