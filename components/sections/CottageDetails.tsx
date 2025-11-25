@@ -2,6 +2,11 @@
 
 import { motion, useInView, Variants } from "framer-motion";
 import { useRef } from "react";
+import {
+  BedIcon,
+  SnowflakeIcon,
+  MountainIcon,
+} from "@/components/svg/CottageDetailsIcons";
 
 const CottageDetails = () => {
   const ref = useRef(null);
@@ -59,12 +64,12 @@ const CottageDetails = () => {
   const features = [
     {
       category: "Rooms",
-      icon: "🛏️",
+      icon: <BedIcon />,
       items: ["2 Bedrooms", "Kitchen", "Bathroom", "Balcony"],
     },
     {
       category: "Amenities",
-      icon: "❄️",
+      icon: <SnowflakeIcon />,
       items: [
         "Air Conditioning",
         "Heating",
@@ -74,7 +79,7 @@ const CottageDetails = () => {
     },
     {
       category: "Nature",
-      icon: "🏔️",
+      icon: <MountainIcon />,
       items: [
         "Mountain View",
         "Forest Access",
@@ -182,11 +187,6 @@ const CottageDetails = () => {
             whileHover={{ scale: 1.02 }}
             className="bg-linear-to-r from-green-50 to-blue-50 rounded-2xl p-8 text-center"
           >
-            <div className="flex justify-center space-x-4 mb-4">
-              <motion.span whileHover={{ scale: 1.3 }} className="text-3xl">
-                🌄
-              </motion.span>
-            </div>
             <h3 className="text-2xl font-semibold text-gray-800 mb-4">
               Perfect Nature Getaway
             </h3>
