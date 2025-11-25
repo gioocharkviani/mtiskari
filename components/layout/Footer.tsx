@@ -128,7 +128,7 @@ const Footer = () => {
           className="border-t border-gray-200 pt-8 text-center"
         >
           <motion.p variants={staggerVariants} className="text-gray-500 mb-4">
-            © {currentYear} A-Frame Cottages. Experience nature like never
+            © {currentYear} Mtiskari Cottage. Experience nature like never
             before.
           </motion.p>
           <motion.div
