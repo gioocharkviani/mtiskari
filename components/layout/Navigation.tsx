@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import React from "react";
-import { motion, Variants } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, Variants, AnimatePresence } from "framer-motion";
 
 interface NavigationItem {
   id: number;
@@ -9,8 +9,6 @@ interface NavigationItem {
   titleGE: string;
   titleEN: string;
 }
-
-//TODO create mobile navigation
 
 const navigationItems: NavigationItem[] = [
   {
@@ -46,6 +44,23 @@ const navigationItems: NavigationItem[] = [
 ];
 
 const Navigation = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+      document.documentElement.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+      document.documentElement.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
+
   const itemVariants: Variants = {
     hidden: {
       opacity: 0,
@@ -70,8 +85,52 @@ const Navigation = () => {
     },
   };
 
+  const mobileMenuVariants: Variants = {
+    closed: {
+      opacity: 0,
+      scale: 0.95,
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut",
+      },
+    },
+    open: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const mobileItemVariants: Variants = {
+    closed: {
+      opacity: 0,
+      x: -20,
+    },
+    open: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    }),
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <nav className="w-max">
+      {/* Desktop Navigation */}
       <motion.ul
         className="hidden md:flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-6"
         initial="hidden"
@@ -99,6 +158,86 @@ const Navigation = () => {
           </motion.li>
         ))}
       </motion.ul>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden">
+        {/* Hamburger Button */}
+        <motion.button
+          className="relative z-50 w-8 h-8 flex flex-col justify-center items-center"
+          onClick={toggleMobileMenu}
+          whileTap={{ scale: 0.95 }}
+        >
+          <motion.span
+            className="w-6 h-0.5 bg-white block absolute"
+            animate={
+              isMobileMenuOpen ? { rotate: 45, y: 0 } : { rotate: 0, y: -6 }
+            }
+            transition={{ duration: 0.3 }}
+          />
+          <motion.span
+            className="w-6 h-0.5 bg-white block"
+            animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          />
+          <motion.span
+            className="w-6 h-0.5 bg-white block absolute"
+            animate={
+              isMobileMenuOpen ? { rotate: -45, y: 0 } : { rotate: 0, y: 6 }
+            }
+            transition={{ duration: 0.3 }}
+          />
+        </motion.button>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                className="fixed inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 z-40"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={closeMobileMenu}
+              />
+
+              {/* Menu Panel */}
+              <motion.div
+                className="fixed top-0 left-0 w-64 h-full bg-gray-900 z-40 shadow-xl"
+                variants={mobileMenuVariants}
+                initial="closed"
+                animate="open"
+                exit="closed"
+              >
+                <div className="pt-20 px-6">
+                  <motion.ul className="flex flex-col space-y-6">
+                    {navigationItems.map((item, index) => (
+                      <motion.li
+                        key={item.id}
+                        className="list-none"
+                        variants={mobileItemVariants}
+                        custom={index}
+                        initial="closed"
+                        animate="open"
+                        whileHover={{ x: 10 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Link
+                          href={item.link}
+                          className="text-white text-lg font-semibold transition-colors duration-200 hover:text-[#87986A] block py-2"
+                          onClick={closeMobileMenu}
+                        >
+                          {item.titleEN}
+                        </Link>
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </div>
     </nav>
   );
 };
