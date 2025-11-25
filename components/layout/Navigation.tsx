@@ -161,7 +161,6 @@ const Navigation = () => {
 
       {/* Mobile Navigation */}
       <div className="md:hidden">
-        {/* Hamburger Button */}
         <motion.button
           className="relative z-50 w-8 h-8 flex flex-col justify-center items-center"
           onClick={toggleMobileMenu}
@@ -188,11 +187,9 @@ const Navigation = () => {
           />
         </motion.button>
 
-        {/* Mobile Menu Overlay */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <>
-              {/* Backdrop */}
               <motion.div
                 className="fixed inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 z-40"
                 initial={{ opacity: 0 }}
@@ -201,7 +198,6 @@ const Navigation = () => {
                 onClick={closeMobileMenu}
               />
 
-              {/* Menu Panel */}
               <motion.div
                 className="fixed top-0 left-0 w-64 h-full bg-gray-900 z-40 shadow-xl"
                 variants={mobileMenuVariants}
