@@ -37,7 +37,6 @@ const HeroBooking = () => {
         transition={{ delay: 1 }}
         className="text-center"
       >
-        {/* <h3 className="text-xl font-bold text-gray-800 mb-4">Book Your Stay</h3> */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="flex flex-col">
             <motion.input
@@ -64,7 +63,7 @@ const HeroBooking = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-[#cdefcd] text-[#041f06] p-3 rounded-lg font-semibold hover:bg-[#6b7a52] transition-colors duration-300"
+            className="bg-[#cdefcd] text-[#000000] p-3 rounded-lg font-semibold hover:bg-[#b8e0b8] transition-colors duration-300"
           >
             Check Availability
           </motion.button>
