@@ -10,6 +10,8 @@ interface NavigationItem {
   titleEN: string;
 }
 
+//TODO create mobile navigation
+
 const navigationItems: NavigationItem[] = [
   {
     id: 1,

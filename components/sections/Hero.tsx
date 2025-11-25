@@ -49,7 +49,7 @@ const Hero = () => {
       />
 
       {/* Header */}
-      <div className="absolute w-full z-3">
+      <div className="absolute top-0 w-full z-10">
         <Header />
       </div>
 

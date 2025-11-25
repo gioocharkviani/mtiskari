@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import ClientLayout from "@/components/layout/ClientLayout";
-
+import LandingLayout from "@/components/layout/LandingLayout";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <ClientLayout>{children}</ClientLayout>
+        <LandingLayout>{children}</LandingLayout>
       </body>
     </html>
   );

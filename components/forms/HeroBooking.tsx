@@ -21,6 +21,8 @@ const HeroBooking = () => {
     },
   };
 
+  //TODO create one calendar where will be shown disabled and awalable days .
+
   return (
     <motion.div
       className="w-full max-w-[1500px] border-[3px] bg-white backdrop-blur-md rounded-2xl p-6 shadow-lg "
