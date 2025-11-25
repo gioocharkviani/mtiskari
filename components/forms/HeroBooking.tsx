@@ -37,12 +37,14 @@ const HeroBooking = () => {
       >
         {/* <h3 className="text-xl font-bold text-gray-800 mb-4">Book Your Stay</h3> */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <motion.input
-            whileFocus={{ scale: 1.05 }}
-            type="date"
-            placeholder="Check-in"
-            className="p-3 border w-full border-gray-300 rounded-lg focus:outline-none focus:border-[#87986A]"
-          />
+          <div className="flex flex-col">
+            <motion.input
+              whileFocus={{ scale: 1.05 }}
+              type="date"
+              placeholder="Check-in"
+              className="p-3 border w-full border-gray-300 rounded-lg focus:outline-none focus:border-[#87986A]"
+            />
+          </div>
           <motion.input
             whileFocus={{ scale: 1.05 }}
             type="date"

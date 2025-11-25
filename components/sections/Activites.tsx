@@ -1,94 +1,100 @@
 "use client";
 import ComfortCard from "../cards/ComfortCard";
-import image1 from "../../public/services/1/Adventure-Icon-10.png";
 import { ComfortTypes } from "@/types";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useState } from "react";
 
+//accets
+import route from "../../public/services/1/route.png";
+import firePlace from "../../public/services/1/firePlase.png";
+import hicking from "../../public/services/1/hicking.png";
+import forest from "../../public/services/1/forest.png";
+import boat from "../../public/services/1/boat.png";
+
 const dummy: ComfortTypes[] = [
   {
     id: 1,
-    icon: image1,
-    titleEn: "Luxury Accommodation",
-    titleGe: "ლუქსუსი განთავსება",
+    icon: firePlace,
+    titleEn: "Cozy Camp Nights",
+    titleGe: "მყუდრო ბანაკის ღამეები",
     descEn:
-      "Experience ultimate comfort in our beautifully designed rooms with premium amenities and stunning views of the surrounding nature.",
+      "Experience enchanting evenings curled up by our stone fireplace, where the flickering light creates an intimate and romantic ambiance.",
     descGe:
       "განიჭეთ უმაღლესი კომფორტი ჩვენს ლამაზად დაპროექტებულ ოთახებში პრემიუმი ხელმისაწვდომობებით და გარშემორტყმული ბუნების გასაოცარი ხედებით.",
   },
   {
     id: 2,
-    icon: image1,
-    titleEn: "Spa & Wellness",
-    titleGe: "სპა და ჯანმრთელობა",
+    icon: hicking,
+    titleEn: "Peak Exploration",
+    titleGe: "მწვერვალების დალაშქვრა",
     descEn:
-      "Relax and rejuvenate with our exclusive spa treatments, sauna, and wellness programs designed to refresh your mind and body.",
+      "Scale breathtaking summits with guided tours that offer stunning vistas and a true connection with nature's majesty.",
     descGe:
       "დაისვენეთ და განაახლეთ თავი ჩვენი ექსკლუზიური სპა პროცედურებით, საუნით და ჯანმრთელობის პროგრამებით, რომლებიც შექმნილია თქვენი გონების და სხეულის გასაახლებლად.",
   },
   {
     id: 3,
-    icon: image1,
-    titleEn: "Gourmet Dining",
-    titleGe: "გურმანული კვება",
+    icon: forest,
+    titleEn: "Deep Forest Treks",
+    titleGe: "ღრმა ტყის ბილიკები",
     descEn:
-      "Savor exquisite local and international cuisine prepared by our expert chefs using fresh, locally sourced ingredients.",
+      "Wander through dense woods and hidden trails, immersing yourself in the tranquil, untouched beauty of the forest canopy.",
     descGe:
       "დააგემოვნეთ ნახევრად ადგილობრივი და საერთაშორისო კულინარია, რომელიც მომზადებულია ჩვენი ექსპერტი შეფ-მზარეულების მიერ ადგილობრივი ახალი ინგრედიენტების გამოყენებით.",
   },
   {
     id: 4,
-    icon: image1,
-    titleEn: "Adventure Activities",
-    titleGe: "სათავგადასავლო აქტივობები",
+    icon: boat,
+    titleEn: "River Relaxation",
+    titleGe: "მდინარის სიმშვიდე",
     descEn:
-      "Explore the great outdoors with guided hiking, mountain biking, and nature walks through our breathtaking landscapes.",
+      "While we do not provide equipment, guests are welcome to bring their own gear to enjoy the gentle currents and natural beauty of the Rioni river.",
     descGe:
-      "გაეცანით დიდ ღია ცის ქვეშ მდებარე ადგილებს ჰაიკინგით, მთის ველოსიპედით და ბუნების ფეხით სეირნობით ჩვენი გასაოცარი ლანდშაფტების მეშვეობით.",
+      "აქტივობებისთვის აღჭურვილობას არ გთავაზობთ, თუმცა, სტუმრებს შეუძლიათ საკუთარი ინვენტარის გამოყენებით ისიამოვნონ რიონის მდინარის ნაზი დინებითა და ბუნების სილამაზით.",
   },
   {
     id: 5,
-    icon: image1,
-    titleEn: "Swimming Pool",
-    titleGe: "საცურაო აუზი",
+    icon: route,
+    titleEn: "The Quest Begins",
+    titleGe: "თავგადასავლის დაწყება",
     descEn:
-      "Enjoy our infinity pool overlooking the mountains, perfect for a refreshing swim or relaxing by the water with a cocktail.",
+      "Uncover hidden secrets and follow ancient routes with our curated maps, leading you to your next grand discovery.",
     descGe:
-      "ისიამოვნეთ ჩვენი უსასრულო აუზით, რომელიც მთებს უყურებს, სრულყოფილია გამაგრილებელი ცურვისთვის ან კოქტეილით წყლის გასწვრივ დასასვენებლად.",
+      "გამოიყენეთ ჩვენი რუკები, რათა აღმოაჩინოთ ფარული საიდუმლოებები და გაუყვეთ უძველეს მარშრუტებს თქვენი შემდეგი დიდი თავგადასავლისკენ.",
   },
   {
     id: 6,
-    icon: image1,
-    titleEn: "Conference Facilities",
-    titleGe: "კონფერენციის ობიექტები",
+    icon: boat,
+    titleEn: "Mineral Water Springs",
+    titleGe: "მინერალური წყაროები",
     descEn:
-      "Host successful business meetings and events in our fully equipped conference rooms with modern technology and professional service.",
+      "Discover the famed Utsera mineral waters, known for their healing properties, and experience a refreshing, natural therapy unique to the Racha region.",
     descGe:
-      "გამართეთ წარმატებული ბიზნეს შეხვედრები და ღონისძიებები ჩვენს სრულად აღჭურვილ კონფერენციის ოთახებში თანამედროვე ტექნოლოგიებით და პროფესიონალური სერვისით.",
+      "აღმოაჩინეთ უწერას ცნობილი მინერალური წყლები, რომლებიც განთქმულია სამკურნალო თვისებებით. დატკბით ბუნებრივი, გამაჯანსაღებელი თერაპიით, რომელიც მხოლოდ რაჭის რეგიონისთვისაა დამახასიათებელი.",
   },
   {
-    id: 7,
-    icon: image1,
-    titleEn: "Fitness Center",
-    titleGe: "ფიტნეს ცენტრი",
+    id: 7, // NEW: Fishing
+    icon: boat,
+    titleEn: "Rioni River Fishing",
+    titleGe: "თევზაობა რიონზე", // Fishing on Rioni
     descEn:
-      "Stay active during your stay with our state-of-the-art fitness equipment, yoga classes, and personal training sessions.",
+      "Enjoy fly or spin fishing in the majestic Rioni river, known for its abundant trout. Bring your own gear and try your luck in Georgias prime fishing spot.",
     descGe:
-      "დარჩით აქტიური თქვენი ვიზიტის დროს ჩვენი თანამედროვე ფიტნეს აღჭურვილობით, იოგის გაკვეთილებით და პერსონალური ვარჯიშის სესიებით.",
+      "ისიამოვნეთ ფლაი ან სპინინგ თევზაობით დიდებულ რიონზე, სადაც გავრცელებულია კალმახი. მოიტანეთ საკუთარი აღჭურვილობა და გამოსცადეთ თქვენი ბედი საქართველოს საუკეთესო სათევზაო ადგილას.",
   },
   {
-    id: 8,
-    icon: image1,
-    titleEn: "Kids Club",
-    titleGe: "ბავშვთა კლუბი",
+    id: 8, // NEW: Culture/History
+    icon: boat,
+    titleEn: "Utsera's Heritage",
+    titleGe: "უწერას მემკვიდრეობა",
     descEn:
-      "Children enjoy supervised activities, games, and entertainment while parents relax and enjoy their vacation time.",
+      "Explore Utseras history as a popular tourist village and spa resort, learning about the local traditions and the unique culture of the Racha region.",
     descGe:
-      "ბავშვები უვარგიშებენ ზედამხედველობის ქვეშ არსებულ აქტივობებს, თამაშებს და გართობას, ხოლო მშობლები ისვენებენ და უვარგიშებენ თავიანთ შვებულების დროს.",
+      "გაეცანით უწერას ისტორიას, როგორც პოპულარულ ტურისტულ სოფელს და სპა კურორტს. შეიტყვეთ ადგილობრივი ტრადიციებისა და რაჭის რეგიონის უნიკალური კულტურის შესახებ.",
   },
 ];
 
-const Comfort = () => {
+const Activites = () => {
   const [showAll, setShowAll] = useState(false);
   const visibleItems = showAll ? dummy : dummy.slice(0, 4);
 
@@ -235,4 +241,4 @@ const Comfort = () => {
   );
 };
 
-export default Comfort;
+export default Activites;

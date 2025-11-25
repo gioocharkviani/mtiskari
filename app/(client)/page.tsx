@@ -1,4 +1,4 @@
-import Comfort from "@/components/sections/Comfort";
+import Activites from "@/components/sections/Activites";
 import CottageDetails from "@/components/sections/CottageDetails";
 
 import Gallery from "@/components/sections/Gallery";
@@ -10,7 +10,7 @@ export default function Home() {
       <Hero />
       <CottageDetails />
       <Gallery />
-      <Comfort />
+      <Activites />
     </div>
   );
 }
