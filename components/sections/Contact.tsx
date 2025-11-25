@@ -109,7 +109,7 @@ const Contact = () => {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <motion.div variants={itemVariants}>
                   <label
                     htmlFor="name"
@@ -325,12 +325,26 @@ const Contact = () => {
             <h3 className="text-2xl font-semibold text-gray-800 mb-4">
               Ready for Your Mountain Getaway?
             </h3>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
               Contact us today to book your stay at Mtiskari Cottage. Whether
               youre planning a romantic escape, family vacation, or solo
               adventure in nature, were here to help you create unforgettable
               memories in the heart of Racha.
             </p>
+            <motion.button
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 15px 30px rgba(4, 31, 6, 0.4)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-linear-to-r from-green-600 via-green-700 to-green-600 text-white px-10 py-4 rounded-2xl font-semibold text-lg shadow-lg relative overflow-hidden group"
+            >
+              <span className="relative z-10">Book Now</span>
+              <motion.div
+                className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+                initial={false}
+              />
+            </motion.button>
           </motion.div>
         </motion.div>
       </div>
