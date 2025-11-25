@@ -20,6 +20,12 @@ const navigationItems: NavigationItem[] = [
     titleEN: "Home",
   },
   {
+    id: 14,
+    link: "#details",
+    titleGE: "დეტალები",
+    titleEN: "Details",
+  },
+  {
     id: 2,
     link: "#gallery",
     titleGE: "გალერია",
@@ -27,13 +33,13 @@ const navigationItems: NavigationItem[] = [
   },
   {
     id: 3,
-    link: "/services",
-    titleGE: "სერვისები",
-    titleEN: "Services",
+    link: "#activites",
+    titleGE: "აქტივობები",
+    titleEN: "Activites",
   },
   {
     id: 4,
-    link: "/contact",
+    link: "#contact",
     titleGE: "კონტაქტი",
     titleEN: "Contact",
   },

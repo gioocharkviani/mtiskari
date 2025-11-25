@@ -91,6 +91,7 @@ const CottageDetails = () => {
 
   return (
     <section
+      id="details"
       ref={ref}
       className="w-full py-20 px-5 flex justify-center mt-[100px] relative"
     >
