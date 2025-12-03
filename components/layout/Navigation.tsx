@@ -25,7 +25,7 @@ const navigationItems: NavigationItem[] = [
   },
   {
     id: 2,
-    link: "#gallery",
+    link: "gallery",
     titleGE: "გალერია",
     titleEN: "Gallery",
   },

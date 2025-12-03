@@ -1,4 +1,5 @@
 import Activites from "@/components/sections/Activites";
+import BottomNav from "@/components/sections/BottomNav";
 import Contact from "@/components/sections/Contact";
 import CottageDetails from "@/components/sections/CottageDetails";
 
@@ -13,6 +14,7 @@ export default function Home() {
       <Gallery />
       <Activites />
       <Contact />
+      <BottomNav />
     </div>
   );
 }

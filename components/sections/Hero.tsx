@@ -1,6 +1,5 @@
 "use client";
 import HeroBooking from "../forms/HeroBooking";
-import Header from "../layout/Header";
 import { motion, Variants } from "framer-motion";
 
 const Hero = () => {
@@ -13,7 +12,7 @@ const Hero = () => {
       scale: 1,
       opacity: 1,
       transition: {
-        duration: 1.5,
+        duration: 1,
         ease: "easeOut",
       },
     },
@@ -49,9 +48,6 @@ const Hero = () => {
       />
 
       {/* Header */}
-      <div className="absolute top-0 w-full z-10">
-        <Header />
-      </div>
 
       {/* Hero Content */}
       <motion.div

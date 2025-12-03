@@ -43,7 +43,6 @@ const images: ImageItem[] = [
   },
 ];
 
-// Animation variants
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -73,7 +72,7 @@ const itemVariants: Variants = {
 const imageVariants: Variants = {
   hidden: {
     opacity: 0,
-    scale: 1.1,
+    scale: 0.98,
   },
   visible: {
     opacity: 1,
@@ -132,7 +131,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className={className}
+      className={`overflow-hidden ${className}`} // Added overflow-hidden
     >
       {children}
     </motion.div>
@@ -141,55 +140,60 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 
 const Gallery: React.FC = () => {
   return (
-    <section
-      id="gallery"
-      className="w-full flex bg-transparent! justify-center"
-    >
-      <div className="max-w-[1500px] w-full px-5  py-10">
-        {/* Header Section */}
-        <AnimatedSection className="flex w-full flex-col gap-3 items-center justify-center">
-          <motion.span
-            variants={itemVariants}
-            className="font-extrabold text-center text-[42px] w-full leading-12"
-          >
-            Discover the Beauty of Mtiskari
-          </motion.span>
-
-          <motion.div variants={buttonVariants}>
-            <Link
-              href=""
-              className="text-[#000000] px-4 py-2 rounded-2xl bg-[#cdefcd] font-bold text-[16px] hover:bg-[#b8e0b8] transition-colors duration-300 block"
+    <div className="w-full overflow-x-hidden">
+      <section
+        id="gallery"
+        className="w-full flex justify-center bg-transparent relative"
+      >
+        <div className="w-full max-w-[1500px] px-5 py-10">
+          <AnimatedSection className="flex w-full flex-col gap-3 items-center justify-center">
+            <motion.span
+              variants={itemVariants}
+              className="font-extrabold text-center text-[42px] w-full leading-12"
             >
-              See more
-            </Link>
-          </motion.div>
-        </AnimatedSection>
+              Discover the Beauty of Mtiskari
+            </motion.span>
 
-        {/* Gallery Grid */}
-        <AnimatedSection className="grid grid-cols-1 md:grid-cols-5 gap-5 mt-6">
-          {images.map((i) => (
-            <motion.div
-              key={i.id}
-              variants={imageVariants}
-              className={`relative overflow-hidden rounded-4xl h-[300px] ${i.colSpan} group`}
-              whileHover={{
-                scale: 1.02,
-                transition: { duration: 0.3 },
-              }}
-            >
-              <Image
-                src={i.src}
-                alt={i.alt}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
-                placeholder="blur"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 60vw"
-              />
+            <motion.div variants={buttonVariants}>
+              <Link
+                href=""
+                className="text-[#000000] px-4 py-2 rounded-2xl bg-[#cdefcd] font-bold text-[16px] hover:bg-[#b8e0b8] transition-colors duration-300 block"
+              >
+                See more
+              </Link>
             </motion.div>
-          ))}
-        </AnimatedSection>
-      </div>
-    </section>
+          </AnimatedSection>
+
+          <AnimatedSection className="w-full mt-6 overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-5 w-full">
+              {images.map((i) => (
+                <motion.div
+                  key={i.id}
+                  variants={imageVariants}
+                  className={`relative overflow-hidden rounded-4xl h-[300px] ${i.colSpan} group`}
+                  whileHover={{
+                    scale: 1.02,
+                    transition: {
+                      duration: 0.3,
+                      ease: "easeInOut",
+                    },
+                  }}
+                >
+                  <Image
+                    src={i.src}
+                    alt={i.alt}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                    placeholder="blur"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 60vw"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+    </div>
   );
 };
 
