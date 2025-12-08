@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
-//TODO create internalization config
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true, 
 };
 
 export default nextConfig;
