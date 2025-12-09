@@ -130,7 +130,6 @@ const Navigation = () => {
 
   return (
     <nav className="w-max">
-      {/* Desktop Navigation */}
       <motion.ul
         className="hidden md:flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-6"
         initial="hidden"
