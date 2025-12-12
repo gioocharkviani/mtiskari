@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, Variants, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 interface NavigationItem {
   id: number;
@@ -45,7 +46,9 @@ const navigationItems: NavigationItem[] = [
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const pathName = usePathname();
+  const hasbg: boolean = pathName === "/";
+  //remove scroll
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -60,6 +63,7 @@ const Navigation = () => {
       document.documentElement.style.overflow = "unset";
     };
   }, [isMobileMenuOpen]);
+  //remove scroll
 
   const itemVariants: Variants = {
     hidden: {
@@ -129,7 +133,8 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="w-max">
+    <nav className="w-max relative">
+      {/* Desktop Navigation */}
       <motion.ul
         className="hidden md:flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-6"
         initial="hidden"
@@ -145,7 +150,8 @@ const Navigation = () => {
           >
             <Link
               href={item.link}
-              className="text-white transition-colors duration-200 font-bold relative"
+              style={{ color: hasbg ? "white" : "balck" }}
+              className={`transition-colors duration-200 font-bold relative`}
             >
               {item.titleEN}
               <motion.div
@@ -188,17 +194,16 @@ const Navigation = () => {
 
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <>
+            <div className="fixed w-full min-h-screen h-full flex flex-row-reverse inset-0 top-0 left-0 z-9999999999999999999999">
               <motion.div
-                className="fixed inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 z-40"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={closeMobileMenu}
+                className="w-full h-full bg-[rgba(0,0,0,0.5)] shadow-xl"
+                variants={mobileMenuVariants}
+                initial="closed"
+                animate="open"
+                exit="closed"
               />
-
               <motion.div
-                className="fixed top-0 left-0 w-64 h-full bg-gray-900 z-40 shadow-xl"
+                className="w-full h-full bg-[#111624] shadow-xl"
                 variants={mobileMenuVariants}
                 initial="closed"
                 animate="open"
@@ -229,9 +234,10 @@ const Navigation = () => {
                   </motion.ul>
                 </div>
               </motion.div>
-            </>
+            </div>
           )}
         </AnimatePresence>
+        {/* end Mobile Nav */}
       </div>
     </nav>
   );
