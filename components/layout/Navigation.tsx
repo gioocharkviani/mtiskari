@@ -46,8 +46,14 @@ const navigationItems: NavigationItem[] = [
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasBg, setHasBg] = useState(false);
   const pathName = usePathname();
-  const hasbg: boolean = pathName === "/";
+
+  useEffect(() => {
+    setHasBg(pathName === "/");
+  }, [pathName]);
+  const textColor = hasBg ? "white" : "black";
+
   //remove scroll
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -150,7 +156,7 @@ const Navigation = () => {
           >
             <Link
               href={item.link}
-              style={{ color: hasbg ? "white" : "balck" }}
+              style={{ color: textColor }}
               className={`transition-colors duration-200 font-bold relative`}
             >
               {item.titleEN}
@@ -172,19 +178,22 @@ const Navigation = () => {
           whileTap={{ scale: 0.95 }}
         >
           <motion.span
-            className="w-6 h-0.5 bg-white block absolute"
+            style={{ background: textColor }}
+            className="w-6 h-0.5 block absolute"
             animate={
               isMobileMenuOpen ? { rotate: 45, y: 0 } : { rotate: 0, y: -6 }
             }
             transition={{ duration: 0.3 }}
           />
           <motion.span
-            className="w-6 h-0.5 bg-white block"
+            style={{ background: textColor }}
+            className="w-6 h-0.5 block"
             animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
             transition={{ duration: 0.3 }}
           />
           <motion.span
-            className="w-6 h-0.5 bg-white block absolute"
+            style={{ background: textColor }}
+            className="w-6 h-0.5  block absolute"
             animate={
               isMobileMenuOpen ? { rotate: -45, y: 0 } : { rotate: 0, y: 6 }
             }

@@ -1,9 +1,15 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-const useHasBg = (): boolean => {
+export const useHasBg = () => {
+  const [hasBg, setHasBg] = useState(false);
   const pathname = usePathname();
 
-  return pathname === "/";
-};
+  useEffect(() => {
+    setHasBg(pathname === "/");
+  }, [pathname]);
 
-export default useHasBg;
+  return hasBg;
+};
