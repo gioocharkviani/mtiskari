@@ -1,8 +1,17 @@
 "use client";
+
 import { motion, Variants } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Logo = () => {
-  const hasBg = false;
+  const [hasBg, setHasBg] = useState(false);
+  const pathName = usePathname();
+
+  useEffect(() => {
+    setHasBg(pathName === "/");
+  }, [pathName]);
+
   const logoVariants: Variants = {
     hidden: { opacity: 0, x: -20 },
     visible: {
@@ -14,8 +23,9 @@ const Logo = () => {
       },
     },
   };
+
   return (
-    <div className="font-bold uppercase text-white text-[30px]">
+    <div className="font-bold uppercase text-[30px]">
       <motion.div
         variants={logoVariants}
         initial="hidden"
@@ -26,11 +36,21 @@ const Logo = () => {
           {/* Logo Text */}
           <div className="flex flex-col">
             <h1
-              className={`text-2xl font-bold bg-linear-to-r ${hasBg ? "from-green-600 to-emerald-700" : "from-green-500 to-emerald-600"} bg-clip-text text-transparent`}
+              className={`text-2xl font-bold ${
+                hasBg
+                  ? "text-white"
+                  : "bg-linear-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent"
+              }`}
             >
               Mtiskari
             </h1>
-            <div className="h-1 w-8 bg-linear-to-r from-green-400 to-emerald-500 rounded-full mt-0.5 group-hover:w-12 transition-all duration-300"></div>
+            <div
+              className={`h-1 w-8 rounded-full mt-0.5 group-hover:w-12 transition-all duration-300 ${
+                hasBg
+                  ? "bg-linear-to-r from-gray-200 to-gray-300"
+                  : "bg-linear-to-r from-green-400 to-emerald-500"
+              }`}
+            ></div>
           </div>
         </div>
       </motion.div>
