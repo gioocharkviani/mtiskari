@@ -50,7 +50,7 @@ const Logo = () => {
                   ? "bg-linear-to-r from-gray-200 to-gray-300"
                   : "bg-linear-to-r from-green-400 to-emerald-500"
               }`}
-            ></div>
+            />
           </div>
         </div>
       </motion.div>

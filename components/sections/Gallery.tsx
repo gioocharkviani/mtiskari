@@ -7,7 +7,6 @@ import test1 from "../../public/test/1.jpg";
 import test2 from "../../public/test/2.jpg";
 import test3 from "../../public/test/3.jpg";
 import test4 from "../../public/test/4.jpg";
-import { GalleryZoom } from "../GalleryZoom";
 
 interface ImageItem {
   id: number;
@@ -139,11 +138,8 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 };
 
 const Gallery: React.FC = () => {
-  const [open, setOpen] = useState(false);
-
   return (
     <>
-      {open && <GalleryZoom isOpen={open} />}
       <div className="w-full overflow-x-hidden">
         <section
           id="gallery"
@@ -174,8 +170,7 @@ const Gallery: React.FC = () => {
                   <motion.div
                     key={i.id}
                     variants={imageVariants}
-                    onClick={() => setOpen(true)}
-                    className={`relative hover:cursor-zoom-in overflow-hidden rounded-4xl h-[300px] ${i.colSpan} group`}
+                    className={`relative  overflow-hidden rounded-4xl h-[300px] ${i.colSpan} group`}
                     whileHover={{
                       scale: 1.02,
                       transition: {
