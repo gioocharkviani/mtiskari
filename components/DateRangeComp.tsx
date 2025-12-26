@@ -88,7 +88,7 @@ const DateRangeComp = () => {
             baseClasses += " text-gray-400 ";
           } else if (isToday) {
             baseClasses +=
-              " bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-200 transform scale-105";
+              " bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-indigo-200 transform scale-105";
           } else {
             baseClasses +=
               " text-gray-700 hover:bg-indigo-50 hover:shadow-md cursor-pointer";
@@ -114,7 +114,7 @@ const DateRangeComp = () => {
       <div className="mt-6 pt-4 border-t border-gray-100">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-linear-to-r from-indigo-500 to-purple-600"></div>
+            <div className="w-3 h-3 rounded-full bg-linear-to-r from-green-500 to-emerald-600"></div>
             <span className="text-gray-600">Today</span>
           </div>
           <div className="text-gray-500">
