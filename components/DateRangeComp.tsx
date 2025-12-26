@@ -87,8 +87,7 @@ const DateRangeComp = () => {
           if (isDisabled) {
             baseClasses += " text-gray-400 ";
           } else if (isToday) {
-            baseClasses +=
-              " bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-indigo-200 transform scale-105";
+            baseClasses += " text-emerald-600 shadow-lgtransform scale-105";
           } else {
             baseClasses +=
               " text-gray-700 hover:bg-indigo-50 hover:shadow-md cursor-pointer";
