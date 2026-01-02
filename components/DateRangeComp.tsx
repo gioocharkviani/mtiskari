@@ -4,9 +4,19 @@ import { renderingDates, nowDate } from "@/libs";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+interface bookDays {
+  startDate: string;
+  endDate: string;
+}
+
 const DateRangeComp = () => {
   const currDate = new Date();
   const [date, setDate] = useState(currDate);
+
+  const [bookDays, setBookDays] = useState<bookDays>({
+    startDate: "",
+    endDate: "",
+  });
 
   // Helper functions
   const dates = renderingDates(date);
@@ -28,6 +38,57 @@ const DateRangeComp = () => {
   // Day names
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  //choose book days
+  const bookDaysHandler = (selectedDate: string) => {
+    const selected = new Date(selectedDate);
+    //check if isnot selected start date
+    if (!bookDays.startDate) {
+      setBookDays({
+        startDate: selectedDate,
+        endDate: "",
+      });
+      return;
+    }
+
+    const startDate = new Date(bookDays.startDate);
+
+    //check if  start date is equal selected date
+    if (bookDays.startDate === selectedDate) {
+      setBookDays({
+        startDate: "",
+        endDate: "",
+      });
+      return;
+    }
+
+    //check if start date is selected and if selectedDate is before start date
+    if (startDate && selected < startDate) {
+      setBookDays({
+        startDate: selectedDate,
+        endDate: "",
+      });
+      return;
+    }
+
+    //check if both date is selected
+    if (bookDays.startDate && bookDays.endDate) {
+      setBookDays({
+        startDate: selectedDate,
+        endDate: "",
+      });
+      return;
+    }
+
+    // Check if start date is selected and selected date is after start date
+    if (bookDays.startDate && selected > startDate) {
+      setBookDays((prev) => ({
+        startDate: prev.startDate,
+        endDate: selectedDate,
+      }));
+      return;
+    }
+  };
+
   return (
     <div className="max-w-[500px] bg-white p-6 rounded-2xl shadow-xl border border-gray-100 mx-auto">
       {/* Calendar Header */}
@@ -48,7 +109,9 @@ const DateRangeComp = () => {
           </button>
 
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-800">{today.month}</h2>
+            <h2 className="text-xl font-semibold text-gray-800">
+              {today.monthShort}
+            </h2>
           </div>
 
           <button
@@ -77,17 +140,28 @@ const DateRangeComp = () => {
       <div className="grid grid-cols-7 gap-2">
         {dates.map((_, i) => {
           const m = new Date(_.date).getDate();
-          const isDisabled = _.isDisable;
+          const isNotInMonth = _.isNotInMonth;
           const isToday = _.isToday;
-
+          const isDisable = _.isDisable;
+          const isSelected =
+            _.date === bookDays.startDate ||
+            _.date === bookDays.endDate ||
+            (_.date > bookDays.startDate && _.date < bookDays.endDate);
           // Determine styling
           let baseClasses =
             "flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 font-medium text-sm";
 
-          if (isDisabled) {
-            baseClasses += " text-gray-400 ";
-          } else if (isToday) {
-            baseClasses += " text-emerald-600 shadow-lgtransform scale-105";
+          if (isDisable) {
+            baseClasses += " text-slate-200! cursor-not-allowed";
+          } else if (isToday && !isSelected) {
+            baseClasses +=
+              "text-emerald-600 shadow-lgtransform scale-105 hover:bg-indigo-50 hover:shadow-md cursor-pointer";
+          } else if (isToday && isSelected) {
+            baseClasses +=
+              "text-emerald-600  bg-green-200 hover:shadow-md cursor-pointer";
+          } else if (isSelected) {
+            baseClasses +=
+              " text-gray-700 bg-green-200 hover:shadow-md cursor-pointer";
           } else {
             baseClasses +=
               " text-gray-700 hover:bg-indigo-50 hover:shadow-md cursor-pointer";
@@ -97,13 +171,9 @@ const DateRangeComp = () => {
             <div
               className={baseClasses}
               key={i}
-              onClick={() =>
-                !isDisabled && console.log("Date selected:", _.date)
-              }
+              onClick={() => !isDisable && bookDaysHandler(_.date)}
             >
-              {!isDisabled && (
-                <span className={isToday ? "font-bold" : ""}>{m}</span>
-              )}
+              {!isNotInMonth && <span>{m}</span>}
             </div>
           );
         })}
@@ -111,10 +181,10 @@ const DateRangeComp = () => {
 
       {/* Current Date Indicator */}
       <div className="mt-6 pt-4 border-t border-gray-100">
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center  justify-between text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-linear-to-r from-green-500 to-emerald-600"></div>
-            <span className="text-gray-600">Today</span>
+            <div className="w-3 h-3 rounded-full  bg-linear-to-r from-green-500 to-emerald-600"></div>
+            <span className="text-gray-600">selected Dates</span>
           </div>
           <div className="text-gray-500">
             {currDate.toLocaleDateString("en-US", {

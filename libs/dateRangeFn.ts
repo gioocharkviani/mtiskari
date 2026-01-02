@@ -1,6 +1,7 @@
 interface daysType {
   isToday: boolean;
   date: string;
+  isNotInMonth: boolean;
   isDisable: boolean;
 }
 
@@ -35,11 +36,13 @@ const renderingDates = (date?: Date) => {
       currentDate.getMonth() === TODAY.getMonth() &&
       currentDate.getFullYear() === TODAY.getFullYear();
 
-    const isDisable = currentDate.getMonth() !== MONTH;
-
+    const isNotInMonth = currentDate.getMonth() !== MONTH;
+    const isDisable =
+      isNotInMonth || formatDate(currentDate) < formatDate(TODAY);
     days.push({
       date: formatDate(currentDate),
       isToday,
+      isNotInMonth,
       isDisable,
     });
   }
@@ -48,10 +51,11 @@ const renderingDates = (date?: Date) => {
 };
 
 const nowDate = (date: Date) => {
-  const month = date.toLocaleString("default", { month: "short" });
+  const monthShort = date.toLocaleString("default", { month: "short" });
+  const monthLong = date.toLocaleString("default", { month: "long" });
   const year = date.getFullYear();
   const day = date.getFullYear();
-  return { month, year, day };
+  return { monthLong, monthShort, year, day };
 };
 
 export { renderingDates, nowDate };
