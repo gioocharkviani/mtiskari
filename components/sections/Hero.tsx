@@ -75,7 +75,7 @@ const Hero = () => {
       </motion.div>
 
       {/* Booking Form */}
-      <div className="w-full absolute bottom-0 flex justify-center z-3 px-5">
+      <div className="w-full absolute bottom-0 flex justify-center z-20 px-5">
         <HeroBooking />
       </div>
     </section>

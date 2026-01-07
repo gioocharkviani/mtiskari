@@ -30,29 +30,36 @@ const HeroBooking = () => {
       {/* Modal - Fixed for all screen sizes */}
       {openDateRange && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50"
+          className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => setOpenDateRange(false)}
         >
           <motion.div
-            className="relative w-max h-max max-w-[95vw] max-h-[95vh] bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            className="relative w-max h-max max-w-[95vw] max-h-[95vh] bg-white overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl flex flex-col"
             initial={{ y: 20, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
-
             {/* Modal Content - Responsive */}
             <div className="flex-1 overflow-auto">
               <div className="w-full">
                 <DateRangeComp />
+                <div className="border-t px-6 gap-2 py-2 border-gray-100 flex justify-end">
+                  <button className="flex-1 bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300 shadow-md hover:shadow-lg">
+                    Apply
+                  </button>
+                  <button
+                    onClick={() => setOpenDateRange(false)}
+                    className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors duration-300 shadow-md hover:shadow-lg"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
-
-            {/* Modal Footer */}
           </motion.div>
         </motion.div>
       )}
@@ -78,7 +85,7 @@ const HeroBooking = () => {
             >
               <div className="p-2 border-2 w-full border-gray-200 rounded-lg bg-gray-50">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-100 rounded-lg">
+                  <div className="p-2 bg-slate-200 rounded-lg">
                     <Calendar className="w-5 h-5 text-[#027a02]" />
                   </div>
                   <div className="text-left flex flex-col items-start ">
@@ -110,7 +117,7 @@ const HeroBooking = () => {
             <div className="w-full">
               <div className="p-2 border-2 w-full border-gray-200 rounded-lg bg-gray-50">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-100 rounded-lg">
+                  <div className="p-2 bg-slate-200 rounded-lg">
                     <DollarSign className="w-5 h-5 text-[#027a02]" />
                   </div>
                   <div className="text-left flex gap-4 items-center">
@@ -124,7 +131,7 @@ const HeroBooking = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-[#cdefcd] w-full text-[#000000] p-3 rounded-lg font-semibold hover:bg-[#b8e0b8] transition-colors duration-300"
+              className="bg-green-500 w-full text-[#ffffff] p-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300"
             >
               book now
             </motion.button>

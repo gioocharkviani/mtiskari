@@ -3,6 +3,7 @@
 import { renderingDates, nowDate } from "@/libs";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 interface bookDays {
   startDate: string;
@@ -12,6 +13,8 @@ interface bookDays {
 const DateRangeComp = () => {
   const currDate = new Date();
   const [date, setDate] = useState(currDate);
+
+  const searchParams = useSearchParams();
 
   const [bookDays, setBookDays] = useState<bookDays>({
     startDate: "",
@@ -90,7 +93,7 @@ const DateRangeComp = () => {
   };
 
   return (
-    <div className="max-w-[500px] bg-white p-6 rounded-2xl shadow-xl border border-gray-100 mx-auto">
+    <div className="max-w-[500px] bg-white px-6 pt-4 pb-2  border border-gray-100 mx-auto">
       {/* Calendar Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
@@ -177,24 +180,6 @@ const DateRangeComp = () => {
             </div>
           );
         })}
-      </div>
-
-      {/* Current Date Indicator */}
-      <div className="mt-6 pt-4 border-t border-gray-100">
-        <div className="flex items-center  justify-between text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full  bg-linear-to-r from-green-500 to-emerald-600"></div>
-            <span className="text-gray-600">selected Dates</span>
-          </div>
-          <div className="text-gray-500">
-            {currDate.toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ const Header = () => {
       ref={ref}
       initial="hidden"
       animate="visible"
-      className="absolute top-0 w-full z-10"
+      className="absolute top-0 left-0 w-full z-10"
     >
       <div className="w-full flex justify-center ">
         <motion.div
