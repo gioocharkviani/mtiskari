@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { Calendar, DollarSign } from "lucide-react";
+import { Calendar, DollarSign, X } from "lucide-react";
+import DateRangeComp from "../DateRangeComp";
 
 const HeroBooking = () => {
   const bookingVariants: Variants = {
@@ -26,48 +27,32 @@ const HeroBooking = () => {
 
   return (
     <>
-      {/* Modal */}
+      {/* Modal - Fixed for all screen sizes */}
       {openDateRange && (
         <motion.div
-          className="w-screen h-screen fixed top-0 left-0 z-50 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          onClick={() => setOpenDateRange(false)}
         >
-          <div
-            className="absolute w-full h-full bg-[rgba(0,0,0,0.5)]"
-            onClick={() => setOpenDateRange(false)}
-          />
           <motion.div
-            className="relative bg-white rounded-lg p-6 max-w-md w-full mx-4"
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            className="relative w-max h-max max-w-[95vw] max-h-[95vh] bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            initial={{ y: 20, opacity: 0, scale: 0.98 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Select Date Range</h2>
-              <button
-                onClick={() => setOpenDateRange(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
-              >
-                ×
-              </button>
+            {/* Modal Header */}
+
+            {/* Modal Content - Responsive */}
+            <div className="flex-1 overflow-auto">
+              <div className="w-full">
+                <DateRangeComp />
+              </div>
             </div>
-            <div className="p-4 border border-gray-200 rounded"></div>
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => setOpenDateRange(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setOpenDateRange(false)}
-                className="px-4 py-2 bg-[#87986A] text-white rounded-lg hover:bg-[#718559]"
-              >
-                Apply
-              </button>
-            </div>
+
+            {/* Modal Footer */}
           </motion.div>
         </motion.div>
       )}
