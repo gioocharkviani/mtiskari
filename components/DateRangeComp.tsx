@@ -3,7 +3,6 @@
 import { renderingDates, nowDate } from "@/libs";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 interface bookDays {
   startDate: string;
@@ -13,8 +12,6 @@ interface bookDays {
 const DateRangeComp = () => {
   const currDate = new Date();
   const [date, setDate] = useState(currDate);
-
-  const searchParams = useSearchParams();
 
   const [bookDays, setBookDays] = useState<bookDays>({
     startDate: "",
