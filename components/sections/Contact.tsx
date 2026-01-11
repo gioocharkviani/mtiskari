@@ -2,6 +2,7 @@
 
 import { motion, useInView, Variants } from "framer-motion";
 import { useRef, useState } from "react";
+import { Button } from "../ui";
 
 const Contact = () => {
   const ref = useRef(null);
@@ -186,15 +187,9 @@ const Contact = () => {
                 />
               </motion.div>
 
-              <motion.button
-                type="submit"
-                variants={itemVariants}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-[#cdefcd] w-full text-[#000000] p-3 rounded-lg font-semibold hover:bg-[#b8e0b8] transition-colors duration-300"
-              >
+              <Button variant="customGreen" className="w-full">
                 Send Message
-              </motion.button>
+              </Button>
             </form>
           </motion.div>
 
@@ -331,20 +326,9 @@ const Contact = () => {
               adventure in nature, were here to help you create unforgettable
               memories in the heart of Racha.
             </p>
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 15px 30px rgba(4, 31, 6, 0.4)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-linear-to-r from-green-600 via-green-700 to-green-600 text-white px-10 py-4 rounded-2xl font-semibold text-lg shadow-lg relative overflow-hidden group"
-            >
-              <span className="relative z-10">Book Now</span>
-              <motion.div
-                className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
-                initial={false}
-              />
-            </motion.button>
+            <Button variant="customGreen" className="text-nowrap">
+              Book now
+            </Button>
           </motion.div>
         </motion.div>
       </div>

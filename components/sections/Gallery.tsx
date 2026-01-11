@@ -1,7 +1,7 @@
 "use client";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { motion, Variants, useInView } from "framer-motion";
 import test1 from "../../public/test/1.jpg";
 import test2 from "../../public/test/2.jpg";
@@ -83,32 +83,6 @@ const imageVariants: Variants = {
   },
 };
 
-const buttonVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.8,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut",
-      delay: 0.6,
-    },
-  },
-  hover: {
-    scale: 1.05,
-    transition: {
-      duration: 0.2,
-      ease: "easeInOut",
-    },
-  },
-  tap: {
-    scale: 0.95,
-  },
-};
-
 interface AnimatedSectionProps {
   children: React.ReactNode;
   className?: string;
@@ -154,14 +128,12 @@ const Gallery: React.FC = () => {
                 Discover the Beauty of Mtiskari
               </motion.span>
 
-              <motion.div variants={buttonVariants}>
-                <Link
-                  href=""
-                  className="text-[#000000] px-4 py-2 rounded-2xl bg-[#cdefcd] font-bold text-[16px] hover:bg-[#b8e0b8] transition-colors duration-300 block"
-                >
-                  See more
-                </Link>
-              </motion.div>
+              <Link
+                href=""
+                className="flex-1 bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300 shadow-md hover:shadow-lg"
+              >
+                See more
+              </Link>
             </AnimatedSection>
 
             <AnimatedSection className="w-full mt-6 overflow-hidden">

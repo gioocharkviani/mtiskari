@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { Calendar, DollarSign, X } from "lucide-react";
+import { Calendar, DollarSign } from "lucide-react";
 import DateRangeComp from "../DateRangeComp";
+import { Button } from "../ui";
 
 const HeroBooking = () => {
   const bookingVariants: Variants = {
@@ -48,15 +49,13 @@ const HeroBooking = () => {
               <div className="w-full">
                 <DateRangeComp />
                 <div className="border-t px-6 gap-2 py-2 border-gray-100 flex justify-end">
-                  <button className="flex-1 bg-green-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300 shadow-md hover:shadow-lg">
-                    Apply
-                  </button>
-                  <button
+                  <Button variant="customGreen">apply</Button>
+                  <Button
                     onClick={() => setOpenDateRange(false)}
-                    className="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors duration-300 shadow-md hover:shadow-lg"
+                    variant="secondary"
                   >
                     Cancel
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -114,27 +113,19 @@ const HeroBooking = () => {
             />
 
             {/* TOTAL COST */}
-            <div className="w-full">
-              <div className="p-2 border-2 w-full border-gray-200 rounded-lg bg-gray-50">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-slate-200 rounded-lg">
-                    <DollarSign className="w-5 h-5 text-[#027a02]" />
-                  </div>
-                  <div className="text-left flex gap-4 items-center">
-                    <p className="text-sm text-gray-500">Total Cost</p>
-                    <p className="font-bold text-xl text-gray-800">0</p>
-                  </div>
-                </div>
+            <div className=" p-2 flex items-center gap-3 border-2 w-full  border-gray-200 rounded-lg bg-gray-50">
+              <div className="p-2 bg-slate-200 rounded-lg">
+                <DollarSign className="w-5 h-5 text-[#027a02]" />
+              </div>
+              <div className="text-left flex gap-4 items-center">
+                <p className="text-sm text-gray-500">Total Cost</p>
+                <p className="font-bold text-xl text-gray-800">0</p>
               </div>
             </div>
             {/* BOOK NOW */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-green-500 w-full text-[#ffffff] p-3 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-300"
-            >
+            <Button variant="customGreen" className="text-nowrap">
               book now
-            </motion.button>
+            </Button>
           </div>
         </motion.div>
       </motion.div>
