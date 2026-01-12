@@ -173,7 +173,7 @@ const Navigation = () => {
       {/* Mobile Navigation */}
       <div className="md:hidden">
         <motion.button
-          className="relative z-50 w-8 h-8 flex flex-col justify-center items-center"
+          className="relative z-999 w-8 h-8 flex flex-col justify-center items-center"
           onClick={toggleMobileMenu}
           whileTap={{ scale: 0.95 }}
         >
@@ -203,12 +203,13 @@ const Navigation = () => {
 
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <div className="fixed w-full min-h-screen h-full flex flex-row-reverse inset-0 top-0 left-0 z-9999999999999999999999">
+            <div className="fixed w-full min-h-screen h-full flex flex-row-reverse inset-0 top-0 left-0 z-99">
               <motion.div
                 className="w-full h-full bg-[rgba(0,0,0,0.5)] shadow-xl"
                 variants={mobileMenuVariants}
                 initial="closed"
                 animate="open"
+                onClick={() => setIsMobileMenuOpen(false)}
                 exit="closed"
               />
               <motion.div
