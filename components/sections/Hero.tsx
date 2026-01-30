@@ -1,4 +1,5 @@
 "use client";
+
 import HeroBooking from "../forms/HeroBooking";
 import { motion, Variants } from "framer-motion";
 
