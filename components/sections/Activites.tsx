@@ -15,7 +15,7 @@ import { Button } from "../ui";
 const dummy: ComfortTypes[] = [
   {
     id: 1,
-    icon: firePlace,
+
     titleEn: "Cozy Camp Nights",
     titleGe: "მყუდრო ბანაკის ღამეები",
     descEn:
@@ -25,7 +25,7 @@ const dummy: ComfortTypes[] = [
   },
   {
     id: 2,
-    icon: hicking,
+
     titleEn: "Peak Exploration",
     titleGe: "მწვერვალების დალაშქვრა",
     descEn:
@@ -35,7 +35,7 @@ const dummy: ComfortTypes[] = [
   },
   {
     id: 3,
-    icon: forest,
+
     titleEn: "Deep Forest Treks",
     titleGe: "ღრმა ტყის ბილიკები",
     descEn:
@@ -45,7 +45,7 @@ const dummy: ComfortTypes[] = [
   },
   {
     id: 4,
-    icon: boat,
+
     titleEn: "River Relaxation",
     titleGe: "მდინარის სიმშვიდე",
     descEn:
@@ -55,7 +55,7 @@ const dummy: ComfortTypes[] = [
   },
   {
     id: 5,
-    icon: route,
+
     titleEn: "The Quest Begins",
     titleGe: "თავგადასავლის დაწყება",
     descEn:
@@ -65,7 +65,7 @@ const dummy: ComfortTypes[] = [
   },
   {
     id: 6,
-    icon: boat,
+
     titleEn: "Mineral Water Springs",
     titleGe: "მინერალური წყაროები",
     descEn:
@@ -75,7 +75,7 @@ const dummy: ComfortTypes[] = [
   },
   {
     id: 7, // NEW: Fishing
-    icon: boat,
+
     titleEn: "Rioni River Fishing",
     titleGe: "თევზაობა რიონზე", // Fishing on Rioni
     descEn:
@@ -85,7 +85,6 @@ const dummy: ComfortTypes[] = [
   },
   {
     id: 8, // NEW: Culture/History
-    icon: boat,
     titleEn: "Utsera's Heritage",
     titleGe: "უწერას მემკვიდრეობა",
     descEn:

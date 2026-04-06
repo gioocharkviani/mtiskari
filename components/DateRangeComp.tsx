@@ -18,6 +18,8 @@ const DateRangeComp = () => {
     endDate: "",
   });
 
+  console.log(bookDays);
+
   // Helper functions
   const dates = renderingDates(date);
   const today = nowDate(date);

@@ -5,6 +5,11 @@ import { Calendar, DollarSign } from "lucide-react";
 import DateRangeComp from "../DateRangeComp";
 import { Button } from "../ui";
 
+interface bookDays {
+  startDate: string;
+  endDate: string;
+}
+
 const HeroBooking = () => {
   const bookingVariants: Variants = {
     hidden: {
