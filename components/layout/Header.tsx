@@ -16,7 +16,7 @@ const Header = () => {
     >
       <div className="w-full flex justify-center ">
         <motion.div
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.1 }}
           className={` max-w-[1500px] w-full h-16 px-6 md:mt-2 flex items-center justify-between `}
         >
           <Logo />

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ComfortTypes } from "@/types";
 
 const ComfortCard = ({ data }: { data: ComfortTypes }) => {
