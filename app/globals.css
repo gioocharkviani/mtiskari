@@ -1,8 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&family=Outfit:wght@100..900&display=swap");
 @import "tailwindcss";
 
 :root {
-  --font-1: "Outfit", sans-serif;
+  --font-1: "Outfit", "Noto Sans Georgian", sans-serif;
   --hero-background: url("/hero-bg.jpg");
   --bg1-background: url("/bg1.jpg");
   --bg2-background: url("/bg2.png");

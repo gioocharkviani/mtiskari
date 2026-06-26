@@ -3,9 +3,11 @@
 import { motion, useInView, Variants } from "framer-motion";
 import { useRef, useState } from "react";
 import { Button } from "../ui";
+import { useContent } from "@/context/ContentContext";
 
 const Contact = () => {
   const ref = useRef(null);
+  const { t } = useContent();
   const isInView = useInView(ref, {
     once: true,
     margin: "-100px",
@@ -87,13 +89,13 @@ const Contact = () => {
             variants={itemVariants}
             className="text-4xl md:text-5xl font-bold text-gray-800 mb-4"
           >
-            Get In Touch
+            {t("contact_title", "Get In Touch")}
           </motion.h2>
           <motion.p
             variants={itemVariants}
             className="text-xl text-gray-600 max-w-2xl mx-auto"
           >
-            Ready to experience Mtiskari? Contact us for bookings and inquiries
+            {t("contact_subtitle", "Ready to experience Mtiskari? Contact us for bookings and inquiries")}
           </motion.p>
         </motion.div>
 
@@ -318,13 +320,10 @@ const Contact = () => {
             className="bg-linear-to-r from-green-50 to-blue-50 rounded-2xl p-8 text-center"
           >
             <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-              Ready for Your Mountain Getaway?
+              {t("contact_cta_title", "Ready for Your Mountain Getaway?")}
             </h3>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
-              Contact us today to book your stay at Mtiskari Cottage. Whether
-              youre planning a romantic escape, family vacation, or solo
-              adventure in nature, were here to help you create unforgettable
-              memories in the heart of Racha.
+              {t("contact_cta_desc", "Contact us today to book your stay at Mtiskari Cottage. Whether you're planning a romantic escape, family vacation, or solo adventure in nature, we're here to help you create unforgettable memories in the heart of Racha.")}
             </p>
             <Button variant="customGreen" className="text-nowrap">
               Book now

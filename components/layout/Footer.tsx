@@ -39,9 +39,20 @@ const Footer = () => {
           variants={containerVariants}
           className="border-t border-gray-200 pt-8 text-center"
         >
-          <motion.p variants={staggerVariants} className="text-gray-500 mb-4">
+          <motion.p variants={staggerVariants} className="text-gray-500 mb-2">
             © {currentYear} Mtiskari Cottage. Experience nature like never
             before.
+          </motion.p>
+          <motion.p variants={staggerVariants} className="text-gray-400 text-sm mb-4">
+            Website made by{" "}
+            <a
+              href="https://bytz.ge"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green-600 hover:text-green-700 font-medium transition-colors"
+            >
+              bytz.ge
+            </a>
           </motion.p>
           <motion.div
             variants={staggerVariants}

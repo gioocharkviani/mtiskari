@@ -2,45 +2,29 @@
 
 import HeroBooking from "../forms/HeroBooking";
 import { motion, Variants } from "framer-motion";
+import { useContent } from "@/context/ContentContext";
 
 const Hero = () => {
+  const { t } = useContent();
+
   const backgroundVariants: Variants = {
-    hidden: {
-      scale: 1.1,
-      opacity: 0,
-    },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        duration: 1,
-        ease: "easeOut",
-      },
-    },
+    hidden: { scale: 1.1, opacity: 0 },
+    visible: { scale: 1, opacity: 1, transition: { duration: 1, ease: "easeOut" } },
   };
 
   const overlayVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 1,
-        delay: 0.5,
-      },
-    },
+    visible: { opacity: 1, transition: { duration: 1, delay: 0.5 } },
   };
 
   return (
-    <section className="w-full flex justify-center min-h-screen relative ">
-      {/* Animated Background */}
+    <section className="w-full flex justify-center min-h-screen relative">
       <motion.div
         className="w-full h-full absolute hero-bg bg-position-[calc(100%+0px)_center]! bg-cover! md:bg-center! z-1"
         variants={backgroundVariants}
         initial="hidden"
         animate="visible"
       />
-
-      {/* Animated Overlay */}
       <motion.div
         className="hero-bg-overlay absolute z-2"
         variants={overlayVariants}
@@ -48,9 +32,6 @@ const Hero = () => {
         animate="visible"
       />
 
-      {/* Header */}
-
-      {/* Hero Content */}
       <motion.div
         className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-3 px-5 text-center"
         initial={{ opacity: 0, y: 50 }}
@@ -63,7 +44,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1, duration: 0.8 }}
         >
-          Welcome to Mtiskari
+          {t("hero_title", "Welcome to Mtiskari")}
         </motion.h1>
         <motion.p
           className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto"
@@ -71,11 +52,10 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.8 }}
         >
-          Experience luxury amidst natures beauty
+          {t("hero_subtitle", "Experience luxury amidst nature's beauty")}
         </motion.p>
       </motion.div>
 
-      {/* Booking Form */}
       <div className="w-full absolute bottom-0 flex justify-center z-20 px-5">
         <HeroBooking />
       </div>
