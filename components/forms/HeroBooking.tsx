@@ -8,6 +8,8 @@ import {
   X,
   ChevronUp,
   ChevronDown,
+  Home,
+  CheckCircle,
 } from "lucide-react";
 import DateRangeComp from "../DateRangeComp";
 import { Button } from "../ui";
@@ -26,6 +28,13 @@ interface BookingForm {
   lastName: string;
   email: string;
   phone: string;
+}
+
+interface Cottage {
+  id: number;
+  name: string;
+  description?: string;
+  maxGuests: number;
 }
 
 const bookingVariants: Variants = {
@@ -48,6 +57,10 @@ export default function HeroBooking() {
   const { t } = useContent();
   const [openDateRange, setOpenDateRange] = useState(false);
   const [openBookingModal, setOpenBookingModal] = useState(false);
+  const [multiCottageMode, setMultiCottageMode] = useState(false);
+  const [cottages, setCottages] = useState<Cottage[]>([]);
+  const [selectedCottage, setSelectedCottage] = useState<Cottage | null>(null);
+  const [showCottagePicker, setShowCottagePicker] = useState(false);
   const [bookDays, setBookDays] = useState<BookDays>({
     startDate: "",
     endDate: "",
@@ -101,6 +114,29 @@ export default function HeroBooking() {
   useEffect(() => {
     fetchAvailability();
   }, [fetchAvailability]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [settingsRes, cottagesRes] = await Promise.all([
+          fetch(`${API}/settings`),
+          fetch(`${API}/cottage`),
+        ]);
+        const settings = await settingsRes.json();
+        const cottageList: Cottage[] = await cottagesRes.json();
+        const isMulti = settings?.multi_cottage_mode === "true";
+        setMultiCottageMode(isMulti);
+        if (Array.isArray(cottageList)) {
+          setCottages(cottageList);
+          if (!isMulti && cottageList.length > 0) {
+            setSelectedCottage(cottageList[0]);
+          }
+        }
+      } catch {
+        // ignore
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (!bookDays.startDate || !bookDays.endDate || nights <= 0) {
@@ -168,6 +204,7 @@ export default function HeroBooking() {
           checkOutDate: bookDays.endDate,
           guestCount,
           totalPrice,
+          ...(selectedCottage ? { cottageId: selectedCottage.id } : {}),
         }),
       });
       const data = await res.json();
@@ -191,10 +228,70 @@ export default function HeroBooking() {
     setGuestCount(2);
     setTotalPrice(0);
     setForm({ firstName: "", lastName: "", email: "", phone: "" });
+    if (multiCottageMode) setSelectedCottage(null);
   };
+
+  const showMultiPicker = multiCottageMode && cottages.length > 1;
 
   return (
     <>
+      {/* Cottage picker modal */}
+      {showCottagePicker && (
+        <motion.div
+          className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          onClick={() => setShowCottagePicker(false)}
+        >
+          <motion.div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden"
+            initial={{ y: 20, opacity: 0, scale: 0.98 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-green-800 px-6 py-5 flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-white">Choose a Cottage</h3>
+                <p className="text-green-200 text-xs mt-0.5">Select which cottage you&apos;d like to book</p>
+              </div>
+              <button onClick={() => setShowCottagePicker(false)} className="text-white/70 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-5 space-y-3">
+              {cottages.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => { setSelectedCottage(c); setShowCottagePicker(false); setOpenDateRange(true); }}
+                  className={`w-full text-left flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${
+                    selectedCottage?.id === c.id
+                      ? "border-green-500 bg-green-50"
+                      : "border-gray-200 hover:border-green-300 hover:bg-gray-50"
+                  }`}
+                >
+                  <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
+                    <Home className="w-5 h-5 text-green-700" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-gray-900">{c.name}</p>
+                      {selectedCottage?.id === c.id && (
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      )}
+                    </div>
+                    {c.description && (
+                      <p className="text-sm text-gray-500 mt-0.5 line-clamp-2">{c.description}</p>
+                    )}
+                    <p className="text-xs text-gray-400 mt-1">Up to {c.maxGuests} guests</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
       {/* Date range modal */}
       {openDateRange && (
         <motion.div
@@ -276,6 +373,9 @@ export default function HeroBooking() {
                   <div>
                     <h3 className="font-bold text-white">
                       Complete Your Booking
+                      {selectedCottage && (
+                        <span className="text-green-200 font-normal"> — {selectedCottage.name}</span>
+                      )}
                     </h3>
                     <p className="text-green-200 text-xs mt-0.5">
                       {bookDays.startDate} → {bookDays.endDate} · ${totalPrice}
@@ -392,10 +492,38 @@ export default function HeroBooking() {
           className="text-center"
         >
           <div className="w-full justify-between flex md:flex-row flex-col gap-4">
+            {/* COTTAGE PICKER — shown only in multi-cottage mode */}
+            {showMultiPicker && (
+              <div
+                className="w-full cursor-pointer"
+                onClick={() => setShowCottagePicker(true)}
+              >
+                <div className={`p-3 border-2 w-full h-full rounded-lg transition-colors ${selectedCottage ? "border-green-400 bg-green-50" : "border-gray-200 bg-gray-50 hover:border-green-400"}`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${selectedCottage ? "bg-green-200" : "bg-slate-200"}`}>
+                      <Home className={`w-5 h-5 ${selectedCottage ? "text-green-700" : "text-[#027a02]"}`} />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-xs text-gray-500">Cottage</p>
+                      <p className={`text-sm font-medium ${selectedCottage ? "text-green-800" : "text-gray-400"}`}>
+                        {selectedCottage ? selectedCottage.name : "Select cottage →"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* DATE PICKER */}
             <div
               className="w-full cursor-pointer"
-              onClick={() => setOpenDateRange(true)}
+              onClick={() => {
+                if (showMultiPicker && !selectedCottage) {
+                  setShowCottagePicker(true);
+                } else {
+                  setOpenDateRange(true);
+                }
+              }}
             >
               <div className="p-3 border-2 w-full h-full border-gray-200 rounded-lg bg-gray-50 hover:border-green-400 transition-colors">
                 <div className="flex items-center gap-3">
@@ -487,7 +615,9 @@ export default function HeroBooking() {
               variant="customGreen"
               className="text-nowrap"
               onClick={() => {
-                if (!bookDays.startDate || !bookDays.endDate) {
+                if (showMultiPicker && !selectedCottage) {
+                  setShowCottagePicker(true);
+                } else if (!bookDays.startDate || !bookDays.endDate) {
                   setOpenDateRange(true);
                 } else {
                   setOpenBookingModal(true);

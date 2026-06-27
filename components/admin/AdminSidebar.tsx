@@ -12,6 +12,8 @@ import {
   X,
   TreePine,
   Languages,
+  Home,
+  Settings,
 } from "lucide-react";
 
 const navItems = [
@@ -19,7 +21,9 @@ const navItems = [
   { href: "/admin/bookings", label: "Bookings", icon: BookOpen },
   { href: "/admin/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/admin/gallery", label: "Gallery", icon: Image },
+  { href: "/admin/cottages", label: "Cottages", icon: Home },
   { href: "/admin/content", label: "Content / Texts", icon: Languages },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
