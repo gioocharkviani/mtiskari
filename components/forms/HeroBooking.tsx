@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import {
   Calendar,
   Users,
@@ -28,13 +28,13 @@ interface BookingForm {
   phone: string;
 }
 
-const bookingVariants = {
+const bookingVariants: Variants = {
   hidden: { opacity: 0, y: 100, scale: 0.8 },
   visible: {
     opacity: 1,
     y: 50,
     scale: 1,
-    transition: { duration: 0.8, ease: "easeOut", delay: 0.3 },
+    transition: { duration: 0.8, ease: "easeOut" as const, delay: 0.3 },
   },
 };
 
@@ -222,7 +222,7 @@ export default function HeroBooking() {
                   <Button
                     variant="customGreen"
                     onClick={applyDates}
-                    disabled={!bookDays.startDate || !bookDays.endDate}
+                    {...{ disabled: !bookDays.startDate || !bookDays.endDate }}
                   >
                     Apply
                   </Button>
