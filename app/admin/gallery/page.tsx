@@ -14,8 +14,9 @@ import {
   Save,
 } from "lucide-react";
 
-const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
-const SERVER = "http://localhost:3001";
+const API =
+  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
+const SERVER = process.env.SERVER_URL || "http://localhost:3001";
 
 interface Photo {
   id: number;
@@ -56,7 +57,10 @@ export default function AdminGalleryPage() {
       const res = await fetch(`${API}/file/gallery/admin`, {
         credentials: "include",
       });
-      if (res.status === 401) { window.location.href = "/admin/login"; return; }
+      if (res.status === 401) {
+        window.location.href = "/admin/login";
+        return;
+      }
       const data = await res.json();
       if (Array.isArray(data)) setPhotos(data);
     } finally {
@@ -64,7 +68,9 @@ export default function AdminGalleryPage() {
     }
   };
 
-  useEffect(() => { fetchPhotos(); }, []);
+  useEffect(() => {
+    fetchPhotos();
+  }, []);
 
   const handleFileUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -135,8 +141,8 @@ export default function AdminGalleryPage() {
       });
       setPhotos((p) =>
         p.map((ph) =>
-          ph.id === photo.id ? { ...ph, isVisible: !ph.isVisible } : ph
-        )
+          ph.id === photo.id ? { ...ph, isVisible: !ph.isVisible } : ph,
+        ),
       );
       showToast(photo.isVisible ? "Hidden from gallery" : "Visible in gallery");
     } catch {
@@ -154,8 +160,10 @@ export default function AdminGalleryPage() {
       });
       setPhotos((p) =>
         p.map((ph) =>
-          ph.id === id ? { ...ph, title: editTitle, description: editDesc } : ph
-        )
+          ph.id === id
+            ? { ...ph, title: editTitle, description: editDesc }
+            : ph,
+        ),
       );
       setEditId(null);
       showToast("Updated!");
@@ -218,7 +226,10 @@ export default function AdminGalleryPage() {
             </div>
           </div>
           <div
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setDragOver(true);
+            }}
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             onClick={() => !uploading && fileInputRef.current?.click()}
@@ -249,7 +260,10 @@ export default function AdminGalleryPage() {
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="aspect-square bg-gray-100 rounded-xl animate-pulse" />
+              <div
+                key={i}
+                className="aspect-square bg-gray-100 rounded-xl animate-pulse"
+              />
             ))}
           </div>
         ) : photos.length === 0 ? (
@@ -268,7 +282,9 @@ export default function AdminGalleryPage() {
               <div
                 key={photo.id}
                 className={`bg-white rounded-xl overflow-hidden border shadow-sm group transition-all ${
-                  photo.isVisible ? "border-gray-100" : "border-orange-200 opacity-70"
+                  photo.isVisible
+                    ? "border-gray-100"
+                    : "border-orange-200 opacity-70"
                 }`}
               >
                 <div
@@ -373,7 +389,10 @@ export default function AdminGalleryPage() {
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
           onClick={() => setPreview(null)}
         >
-          <div className="relative max-w-4xl max-h-[90vh] w-full" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative max-w-4xl max-h-[90vh] w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={() => setPreview(null)}
               className="absolute -top-10 right-0 text-white/70 hover:text-white text-3xl leading-none z-10"

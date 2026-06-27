@@ -7,7 +7,7 @@ import { useContent } from "@/context/ContentContext";
 
 const API =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
-const SERVER = "http://localhost:3001";
+const SERVER = process.env.SERVER_URL || "http://localhost:3001";
 
 interface Photo {
   id: number;

@@ -9,8 +9,9 @@ import test2 from "../../public/test/2.jpg";
 import test3 from "../../public/test/3.jpg";
 import test4 from "../../public/test/4.jpg";
 
-const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
-const SERVER = "http://localhost:3001";
+const API =
+  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
+const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001";
 
 interface ApiPhoto {
   id: number;
@@ -27,7 +28,12 @@ interface ImageItem {
   isExternal?: boolean;
 }
 
-const COL_SPANS = ["md:col-span-3", "md:col-span-2", "md:col-span-2", "md:col-span-3"];
+const COL_SPANS = [
+  "md:col-span-3",
+  "md:col-span-2",
+  "md:col-span-2",
+  "md:col-span-3",
+];
 
 const fallbackImages: ImageItem[] = [
   { id: 1, src: test1, alt: "Mtiskari landscape 1", colSpan: COL_SPANS[0] },
@@ -38,7 +44,10 @@ const fallbackImages: ImageItem[] = [
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.2, delayChildren: 0.3 } },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2, delayChildren: 0.3 },
+  },
 };
 
 const itemVariants: Variants = {
@@ -48,12 +57,17 @@ const itemVariants: Variants = {
 
 const imageVariants: Variants = {
   hidden: { opacity: 0, scale: 0.98 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" } },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.8, ease: "easeOut" },
+  },
 };
 
-const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string }> = ({
-  children, className = "",
-}) => {
+const AnimatedSection: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   return (
@@ -93,7 +107,10 @@ const Gallery: React.FC = () => {
 
   return (
     <div className="w-full overflow-x-hidden">
-      <section id="gallery" className="w-full flex justify-center bg-transparent relative">
+      <section
+        id="gallery"
+        className="w-full flex justify-center bg-transparent relative"
+      >
         <div className="w-full max-w-[1500px] px-5 py-10">
           <AnimatedSection className="flex w-full flex-col gap-3 items-center justify-center">
             <motion.span
@@ -117,7 +134,10 @@ const Gallery: React.FC = () => {
                   key={img.id}
                   variants={imageVariants}
                   className={`relative overflow-hidden rounded-4xl h-[300px] ${img.colSpan} group`}
-                  whileHover={{ scale: 1.02, transition: { duration: 0.3, ease: "easeInOut" } }}
+                  whileHover={{
+                    scale: 1.02,
+                    transition: { duration: 0.3, ease: "easeInOut" },
+                  }}
                 >
                   <Image
                     src={img.src}
