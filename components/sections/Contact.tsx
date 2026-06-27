@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import { Button } from "../ui";
 import { useContent } from "@/context/ContentContext";
 
+const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
+
 const Contact = () => {
   const ref = useRef(null);
   const { t } = useContent();
@@ -19,6 +21,9 @@ const Contact = () => {
     phone: "",
     message: "",
   });
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [sendError, setSendError] = useState("");
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -58,15 +63,30 @@ const Contact = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    setSendError("");
+    setSending(true);
+    try {
+      const res = await fetch(`${API}/email/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        setSendError("Failed to send message. Please try again.");
+        return;
+      }
+      setSent(true);
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      setSendError("Connection error. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -189,8 +209,20 @@ const Contact = () => {
                 />
               </motion.div>
 
-              <Button variant="customGreen" className="w-full">
-                Send Message
+              {sendError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                  {sendError}
+                </div>
+              )}
+
+              {sent && (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-medium">
+                  ✓ Message sent! We&apos;ll get back to you soon.
+                </div>
+              )}
+
+              <Button variant="customGreen" className="w-full" disabled={sending}>
+                {sending ? "Sending..." : sent ? "Message Sent ✓" : "Send Message"}
               </Button>
             </form>
           </motion.div>
