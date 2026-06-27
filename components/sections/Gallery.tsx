@@ -9,8 +9,9 @@ import test2 from "../../public/test/2.jpg";
 import test3 from "../../public/test/3.jpg";
 import test4 from "../../public/test/4.jpg";
 
-const API = process.env.NEXT_PUBLIC_SERVER_URL;
-const SERVER = process.env.SERVER_URL;
+const API =
+  process.env.NEXT_PUBLIC_SERVER_URL || "http://205.209.110.121:3351/api/v1";
+const SERVER = process.env.SERVER_URL || "http://205.209.110.121:3351";
 
 interface ApiPhoto {
   id: number;
