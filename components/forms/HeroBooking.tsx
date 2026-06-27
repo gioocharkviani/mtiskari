@@ -85,11 +85,13 @@ export default function HeroBooking() {
   const fetchAvailability = useCallback(async () => {
     const now = new Date();
     const unavailable: string[] = [];
-    for (let i = 0; i < 3; i++) {
+    // Only pass cottageId in multi-cottage mode; single-cottage always uses cottageId=0 (global)
+    const cottageParam = (multiCottageMode && selectedCottage) ? `&cottageId=${selectedCottage.id}` : "";
+    for (let i = 0; i < 6; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
       try {
         const res = await fetch(
-          `${API}/calendar?year=${d.getFullYear()}&month=${d.getMonth() + 1}`,
+          `${API}/calendar?year=${d.getFullYear()}&month=${d.getMonth() + 1}${cottageParam}`,
         );
         const data = await res.json();
         if (data.success && data.data?.days) {
@@ -108,7 +110,7 @@ export default function HeroBooking() {
       }
     }
     setUnavailableDates(unavailable);
-  }, []);
+  }, [selectedCottage, multiCottageMode]);
 
   useEffect(() => {
     fetchAvailability();
@@ -150,12 +152,14 @@ export default function HeroBooking() {
         month: start.getMonth() + 1,
       };
       try {
+        // Only pass cottageId in multi-cottage mode; single-cottage always uses cottageId=0 (global)
+        const cottageParam = (multiCottageMode && selectedCottage) ? `&cottageId=${selectedCottage.id}` : "";
         const res = await fetch(
-          `${API}/calendar?year=${monthYear.year}&month=${monthYear.month}`,
+          `${API}/calendar?year=${monthYear.year}&month=${monthYear.month}${cottageParam}`,
         );
         const data = await res.json();
         if (data.success) {
-          const monthBasePrice = data.data?.monthInfo?.price || 0;
+          const monthBasePrice = data.data?.monthInfo?.price ?? 0;
           const dayMap = new Map(
             (data.data?.days || []).map(
               (d: { date: string; price?: number }) => [d.date, d.price],
@@ -168,17 +172,19 @@ export default function HeroBooking() {
           while (cur <= end) {
             const key = cur.toISOString().split("T")[0];
             const dayPrice = dayMap.get(key);
-            price += typeof dayPrice === "number" ? dayPrice : monthBasePrice;
+            price += typeof dayPrice === "number" && dayPrice > 0 ? dayPrice : monthBasePrice;
             cur.setDate(cur.getDate() + 1);
           }
           setTotalPrice(price);
+        } else {
+          setTotalPrice(0);
         }
       } catch {
-        setTotalPrice(nights * 100);
+        setTotalPrice(0);
       }
     };
     calcPrice();
-  }, [bookDays, nights]);
+  }, [bookDays, nights, selectedCottage, multiCottageMode]);
 
   const applyDates = () => {
     if (bookDays.startDate && bookDays.endDate) {
@@ -203,7 +209,7 @@ export default function HeroBooking() {
           checkOutDate: bookDays.endDate,
           guestCount,
           totalPrice,
-          ...(selectedCottage ? { cottageId: selectedCottage.id } : {}),
+          ...(multiCottageMode && selectedCottage ? { cottageId: selectedCottage.id } : {}),
         }),
       });
       const data = await res.json();
@@ -393,7 +399,8 @@ export default function HeroBooking() {
                       )}
                     </h3>
                     <p className="text-green-200 text-xs mt-0.5">
-                      {bookDays.startDate} → {bookDays.endDate} · {totalPrice}
+                      {bookDays.startDate} → {bookDays.endDate} · {nights} night{nights !== 1 ? "s" : ""}
+                      {totalPrice > 0 ? ` · ₾${totalPrice}` : ""}
                     </p>
                   </div>
                   <button
@@ -473,9 +480,12 @@ export default function HeroBooking() {
                   )}
 
                   <div className="bg-gray-50 rounded-xl p-4 text-sm">
+                    <div className="flex justify-between items-center text-gray-600 mb-1">
+                      <span>{nights} night{nights !== 1 ? "s" : ""}</span>
+                    </div>
                     <div className="flex justify-between items-center font-bold text-gray-900">
                       <span>{t("total_cost_label", "Total Cost")}</span>
-                      <span>{totalPrice}</span>
+                      <span>{totalPrice > 0 ? `₾${totalPrice}` : t("price_on_request", "Price on request")}</span>
                     </div>
                   </div>
 
@@ -628,7 +638,7 @@ export default function HeroBooking() {
                 <p
                   className={`font-bold transition-all duration-300 ${totalPrice > 0 ? "text-xl text-green-700" : "text-xl text-gray-800"}`}
                 >
-                  {totalPrice > 0 ? `${totalPrice}` : nights > 0 ? "..." : "0"}
+                  {totalPrice > 0 ? `₾${totalPrice}` : nights > 0 ? "—" : "₾0"}
                 </p>
               </div>
             </div>

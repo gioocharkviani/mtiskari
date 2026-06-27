@@ -11,6 +11,8 @@ import {
   CheckSquare,
   Square,
   X,
+  Home,
+  Trash2,
 } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
@@ -21,6 +23,7 @@ interface DayInfo {
   price?: number | null;
   isBooked?: boolean;
   isBlocked?: boolean;
+  cottageId?: number;
 }
 
 interface MonthInfo {
@@ -28,6 +31,13 @@ interface MonthInfo {
   month: number;
   year: number;
   price?: number | null;
+  cottageId?: number;
+}
+
+interface Cottage {
+  id: number;
+  name: string;
+  isActive: boolean;
 }
 
 const MONTH_NAMES = [
@@ -44,6 +54,11 @@ export default function AdminCalendarPage() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // Multi-cottage
+  const [multiCottageMode, setMultiCottageMode] = useState(false);
+  const [cottages, setCottages] = useState<Cottage[]>([]);
+  const [selectedCottageId, setSelectedCottageId] = useState<number>(0);
+
   // Month price
   const [monthPrice, setMonthPrice] = useState("");
 
@@ -59,11 +74,32 @@ export default function AdminCalendarPage() {
     setTimeout(() => setToast(""), 3000);
   };
 
+  // Load settings and cottages once
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const res = await fetch(`${API}/settings`, { credentials: "include" });
+        const data = await res.json();
+        const isMulti = data.multi_cottage_mode === "true";
+        setMultiCottageMode(isMulti);
+
+        if (isMulti) {
+          const cRes = await fetch(`${API}/cottage/admin`, { credentials: "include" });
+          const cData = await cRes.json();
+          const list: Cottage[] = cData.data || cData || [];
+          setCottages(list);
+        }
+      } catch {}
+    };
+    loadSettings();
+  }, []);
+
   const fetchCalendar = useCallback(async () => {
     setLoading(true);
     setSelectedDates(new Set());
     try {
-      const res = await fetch(`${API}/calendar?year=${year}&month=${month}`, {
+      const cottageParam = selectedCottageId > 0 ? `&cottageId=${selectedCottageId}` : "";
+      const res = await fetch(`${API}/calendar?year=${year}&month=${month}${cottageParam}`, {
         credentials: "include",
       });
       if (res.status === 401) { window.location.href = "/admin/login"; return; }
@@ -73,14 +109,14 @@ export default function AdminCalendarPage() {
         setDays(data.data.days || []);
         setMonthPrice(data.data.monthInfo?.price?.toString() || "");
       } else {
-        setMonthInfo({ month, year });
+        setMonthInfo({ month, year, cottageId: selectedCottageId });
         setDays([]);
         setMonthPrice("");
       }
     } finally {
       setLoading(false);
     }
-  }, [year, month]);
+  }, [year, month, selectedCottageId]);
 
   useEffect(() => { fetchCalendar(); }, [fetchCalendar]);
 
@@ -102,7 +138,7 @@ export default function AdminCalendarPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ month, year, price }),
+        body: JSON.stringify({ month, year, price, cottageId: selectedCottageId }),
       });
       showToast("Month base price saved!");
       fetchCalendar();
@@ -114,13 +150,69 @@ export default function AdminCalendarPage() {
   const updateDays = async (dayUpdates: Partial<DayInfo>[]) => {
     setSaving(true);
     try {
+      const updates = dayUpdates.map((d) => ({ ...d, cottageId: selectedCottageId }));
       await fetch(`${API}/calendar/days`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(dayUpdates),
+        body: JSON.stringify(updates),
       });
       showToast("Days updated!");
+      fetchCalendar();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const deleteDay = async (dayId: number) => {
+    setSaving(true);
+    try {
+      await fetch(`${API}/calendar/day/${dayId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      showToast("Custom price removed!");
+      fetchCalendar();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Delete day records for selected dates (custom price removal)
+  const removeCustomPrices = async () => {
+    if (selectedDates.size === 0) return;
+    const dayMap = new Map(days.map((d) => [d.date, d]));
+    setSaving(true);
+    try {
+      const toDelete = Array.from(selectedDates)
+        .map((date) => dayMap.get(date))
+        .filter((d): d is DayInfo => d !== undefined && !!d.id && !d.isBooked && !d.isBlocked);
+
+      for (const day of toDelete) {
+        await fetch(`${API}/calendar/day/${day.id}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+      }
+
+      // For days with no record in DB (no id), just skip — they inherit base price
+      const remaining = Array.from(selectedDates).filter((date) => {
+        const d = dayMap.get(date);
+        return d && d.id && (d.isBooked || d.isBlocked);
+      });
+      if (remaining.length > 0) {
+        // set price=null for days that can't be deleted
+        const updates = remaining.map((date) => ({ ...dayMap.get(date), date, price: null }));
+        await fetch(`${API}/calendar/days`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(updates.map((d) => ({ ...d, cottageId: selectedCottageId }))),
+        });
+      }
+
+      showToast("Custom prices removed!");
+      setSelectedDates(new Set());
       fetchCalendar();
     } finally {
       setSaving(false);
@@ -175,19 +267,6 @@ export default function AdminCalendarPage() {
     setSelectedDates(new Set());
   };
 
-  // Clear prices on selected days
-  const clearBulkPrice = async () => {
-    if (selectedDates.size === 0) return;
-    const dayMap = new Map(days.map((d) => [d.date, d]));
-    const updates = Array.from(selectedDates).map((date) => ({
-      ...(dayMap.get(date) || {}),
-      date,
-      price: 0,
-    }));
-    await updateDays(updates);
-    setSelectedDates(new Set());
-  };
-
   // Build calendar grid
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -211,8 +290,8 @@ export default function AdminCalendarPage() {
   };
 
   const getDisplayPrice = (day: DayInfo) => {
-    if (day.price != null && day.price > 0) return `$${day.price}`;
-    if (basePrice != null) return `$${basePrice}`;
+    if (day.price != null && day.price > 0) return `₾${day.price}`;
+    if (basePrice != null) return `₾${basePrice}`;
     return null;
   };
 
@@ -220,6 +299,11 @@ export default function AdminCalendarPage() {
   const allSelected = calendarCells
     .filter((d): d is DayInfo => d !== null && !d.isBooked)
     .every((d) => selectedDates.has(d.date));
+
+  const selectedCottageName =
+    selectedCottageId === 0
+      ? "All / Single Cottage"
+      : cottages.find((c) => c.id === selectedCottageId)?.name || "Unknown";
 
   return (
     <AdminShell>
@@ -230,6 +314,40 @@ export default function AdminCalendarPage() {
             Click days to select · Set prices · Block dates
           </p>
         </div>
+
+        {/* Cottage selector (multi-cottage mode only) */}
+        {multiCottageMode && cottages.length > 0 && (
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase mb-2 flex items-center gap-1.5">
+              <Home className="w-3.5 h-3.5" /> Managing calendar for
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedCottageId(0)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                  selectedCottageId === 0
+                    ? "bg-green-600 text-white border-green-700"
+                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                }`}
+              >
+                Global (shared)
+              </button>
+              {cottages.map((cottage) => (
+                <button
+                  key={cottage.id}
+                  onClick={() => setSelectedCottageId(cottage.id)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                    selectedCottageId === cottage.id
+                      ? "bg-green-600 text-white border-green-700"
+                      : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  {cottage.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Month navigation + base price */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
@@ -242,6 +360,9 @@ export default function AdminCalendarPage() {
                 {MONTH_NAMES[month - 1]} {year}
               </h2>
               <p className="text-xs text-gray-400 mt-0.5">
+                {multiCottageMode && selectedCottageId > 0 && (
+                  <span className="text-green-600 font-medium">{selectedCottageName} · </span>
+                )}
                 {days.filter((d) => d.isBooked).length} booked ·{" "}
                 {days.filter((d) => d.isBlocked).length} blocked ·{" "}
                 {days.filter((d) => d.price != null && d.price > 0).length} custom price
@@ -257,7 +378,7 @@ export default function AdminCalendarPage() {
             <span className="text-sm font-bold text-gray-400 shrink-0 w-4 h-4 flex items-center justify-center">₾</span>
             <div className="flex-1">
               <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
-                Base price for {MONTH_NAMES[month - 1]} (applied to all unpriced days)
+                Base price for {MONTH_NAMES[month - 1]}{multiCottageMode && selectedCottageId > 0 ? ` — ${selectedCottageName}` : ""} (applied to all unpriced days)
               </p>
               <div className="flex gap-2">
                 <input
@@ -388,11 +509,11 @@ export default function AdminCalendarPage() {
               {/* Set price */}
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase mb-2">
-                  Set price for all selected days
+                  Set custom price for selected days
                 </label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-bold">₾</span>
                     <input
                       type="number"
                       min={0}
@@ -411,11 +532,11 @@ export default function AdminCalendarPage() {
                   </button>
                 </div>
                 <button
-                  onClick={clearBulkPrice}
+                  onClick={removeCustomPrices}
                   disabled={saving}
-                  className="mt-2 text-xs text-gray-400 hover:text-red-500 transition-colors"
+                  className="mt-2 flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors"
                 >
-                  Clear custom prices (use base price)
+                  <Trash2 className="w-3 h-3" /> Remove custom prices (use base price)
                 </button>
               </div>
 

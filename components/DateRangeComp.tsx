@@ -48,8 +48,13 @@ const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
 
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  const hasUnavailableBetween = (start: string, end: string) => {
+    return disabledDates.some((d) => d > start && d < end);
+  };
+
   const bookDaysHandler = (selectedDate: string) => {
-    if (!bookDays.startDate) {
+    // If no start or already have both — start fresh
+    if (!bookDays.startDate || bookDays.endDate) {
       setBookDays({ startDate: selectedDate, endDate: "" });
       return;
     }
@@ -57,25 +62,26 @@ const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
     const startDate = new Date(bookDays.startDate);
     const selected = new Date(selectedDate);
 
+    // Clicking same day — reset
     if (bookDays.startDate === selectedDate) {
       setBookDays({ startDate: "", endDate: "" });
       return;
     }
 
+    // Selected before start — restart
     if (selected < startDate) {
       setBookDays({ startDate: selectedDate, endDate: "" });
       return;
     }
 
-    if (bookDays.startDate && bookDays.endDate) {
+    // Check if any booked day falls inside the selected range
+    if (hasUnavailableBetween(bookDays.startDate, selectedDate)) {
+      // restart from selected date to avoid spanning blocked days
       setBookDays({ startDate: selectedDate, endDate: "" });
       return;
     }
 
-    if (bookDays.startDate && selected > startDate) {
-      setBookDays({ startDate: bookDays.startDate, endDate: selectedDate });
-      return;
-    }
+    setBookDays({ startDate: bookDays.startDate, endDate: selectedDate });
   };
 
   return (
