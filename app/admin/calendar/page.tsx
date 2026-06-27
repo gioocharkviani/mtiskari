@@ -7,7 +7,6 @@ import {
   Save,
   Lock,
   Unlock,
-  DollarSign,
   RefreshCw,
   CheckSquare,
   Square,
@@ -255,7 +254,7 @@ export default function AdminCalendarPage() {
 
           {/* Base monthly price */}
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl mb-4">
-            <DollarSign className="w-4 h-4 text-gray-400 shrink-0" />
+            <span className="text-sm font-bold text-gray-400 shrink-0 w-4 h-4 flex items-center justify-center">₾</span>
             <div className="flex-1">
               <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
                 Base price for {MONTH_NAMES[month - 1]} (applied to all unpriced days)

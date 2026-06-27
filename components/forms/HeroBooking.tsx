@@ -4,7 +4,6 @@ import { motion, type Variants } from "framer-motion";
 import {
   Calendar,
   Users,
-  DollarSign,
   X,
   ChevronUp,
   ChevronDown,
@@ -253,9 +252,14 @@ export default function HeroBooking() {
             <div className="bg-green-800 px-6 py-5 flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-white">Choose a Cottage</h3>
-                <p className="text-green-200 text-xs mt-0.5">Select which cottage you&apos;d like to book</p>
+                <p className="text-green-200 text-xs mt-0.5">
+                  Select which cottage you&apos;d like to book
+                </p>
               </div>
-              <button onClick={() => setShowCottagePicker(false)} className="text-white/70 hover:text-white">
+              <button
+                onClick={() => setShowCottagePicker(false)}
+                className="text-white/70 hover:text-white"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -263,7 +267,11 @@ export default function HeroBooking() {
               {cottages.map((c) => (
                 <button
                   key={c.id}
-                  onClick={() => { setSelectedCottage(c); setShowCottagePicker(false); setOpenDateRange(true); }}
+                  onClick={() => {
+                    setSelectedCottage(c);
+                    setShowCottagePicker(false);
+                    setOpenDateRange(true);
+                  }}
                   className={`w-full text-left flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${
                     selectedCottage?.id === c.id
                       ? "border-green-500 bg-green-50"
@@ -281,9 +289,13 @@ export default function HeroBooking() {
                       )}
                     </div>
                     {c.description && (
-                      <p className="text-sm text-gray-500 mt-0.5 line-clamp-2">{c.description}</p>
+                      <p className="text-sm text-gray-500 mt-0.5 line-clamp-2">
+                        {c.description}
+                      </p>
                     )}
-                    <p className="text-xs text-gray-400 mt-1">Up to {c.maxGuests} guests</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Up to {c.maxGuests} guests
+                    </p>
                   </div>
                 </button>
               ))}
@@ -374,11 +386,14 @@ export default function HeroBooking() {
                     <h3 className="font-bold text-white">
                       Complete Your Booking
                       {selectedCottage && (
-                        <span className="text-green-200 font-normal"> — {selectedCottage.name}</span>
+                        <span className="text-green-200 font-normal">
+                          {" "}
+                          — {selectedCottage.name}
+                        </span>
                       )}
                     </h3>
                     <p className="text-green-200 text-xs mt-0.5">
-                      {bookDays.startDate} → {bookDays.endDate} · ${totalPrice}
+                      {bookDays.startDate} → {bookDays.endDate} · {totalPrice}
                     </p>
                   </div>
                   <button
@@ -460,7 +475,7 @@ export default function HeroBooking() {
                   <div className="bg-gray-50 rounded-xl p-4 text-sm">
                     <div className="flex justify-between items-center font-bold text-gray-900">
                       <span>{t("total_cost_label", "Total Cost")}</span>
-                      <span>${totalPrice}</span>
+                      <span>{totalPrice}</span>
                     </div>
                   </div>
 
@@ -498,15 +513,25 @@ export default function HeroBooking() {
                 className="w-full cursor-pointer"
                 onClick={() => setShowCottagePicker(true)}
               >
-                <div className={`p-3 border-2 w-full h-full rounded-lg transition-colors ${selectedCottage ? "border-green-400 bg-green-50" : "border-gray-200 bg-gray-50 hover:border-green-400"}`}>
+                <div
+                  className={`p-3 border-2 w-full h-full rounded-lg transition-colors ${selectedCottage ? "border-green-400 bg-green-50" : "border-gray-200 bg-gray-50 hover:border-green-400"}`}
+                >
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${selectedCottage ? "bg-green-200" : "bg-slate-200"}`}>
-                      <Home className={`w-5 h-5 ${selectedCottage ? "text-green-700" : "text-[#027a02]"}`} />
+                    <div
+                      className={`p-2 rounded-lg ${selectedCottage ? "bg-green-200" : "bg-slate-200"}`}
+                    >
+                      <Home
+                        className={`w-5 h-5 ${selectedCottage ? "text-green-700" : "text-[#027a02]"}`}
+                      />
                     </div>
                     <div className="text-left">
                       <p className="text-xs text-gray-500">Cottage</p>
-                      <p className={`text-sm font-medium ${selectedCottage ? "text-green-800" : "text-gray-400"}`}>
-                        {selectedCottage ? selectedCottage.name : "Select cottage →"}
+                      <p
+                        className={`text-sm font-medium ${selectedCottage ? "text-green-800" : "text-gray-400"}`}
+                      >
+                        {selectedCottage
+                          ? selectedCottage.name
+                          : "Select cottage →"}
                       </p>
                     </div>
                   </div>
@@ -590,9 +615,11 @@ export default function HeroBooking() {
               <div
                 className={`p-2 rounded-lg transition-colors ${totalPrice > 0 ? "bg-green-200" : "bg-slate-200"}`}
               >
-                <DollarSign
-                  className={`w-5 h-5 ${totalPrice > 0 ? "text-green-700" : "text-[#027a02]"}`}
-                />
+                <span
+                  className={`text-base font-bold leading-none ${totalPrice > 0 ? "text-green-700" : "text-[#027a02]"}`}
+                >
+                  ₾
+                </span>
               </div>
               <div className="text-left flex flex-col">
                 <p className="text-xs text-gray-500">
@@ -601,11 +628,7 @@ export default function HeroBooking() {
                 <p
                   className={`font-bold transition-all duration-300 ${totalPrice > 0 ? "text-xl text-green-700" : "text-xl text-gray-800"}`}
                 >
-                  {totalPrice > 0
-                    ? `$${totalPrice}`
-                    : nights > 0
-                      ? "..."
-                      : "$0"}
+                  {totalPrice > 0 ? `${totalPrice}` : nights > 0 ? "..." : "0"}
                 </p>
               </div>
             </div>

@@ -5,13 +5,16 @@ import {
   BookOpen,
   CheckCircle,
   Clock,
-  DollarSign,
   Users,
   CalendarCheck,
   TrendingUp,
   XCircle,
 } from "lucide-react";
 import Link from "next/link";
+
+const LariIcon = ({ className }: { className?: string }) => (
+  <span className={`font-bold leading-none ${className ?? ""}`}>₾</span>
+);
 
 const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
 
@@ -113,8 +116,8 @@ export default function AdminDashboard() {
         },
         {
           label: "Total Revenue",
-          value: `$${stats.totalRevenue.toLocaleString()}`,
-          icon: DollarSign,
+          value: `₾${stats.totalRevenue.toLocaleString()}`,
+          icon: LariIcon,
           color: "bg-emerald-500",
           bg: "bg-emerald-50",
         },

@@ -14,6 +14,7 @@ import {
   Languages,
   Home,
   Settings,
+  Globe,
 } from "lucide-react";
 
 const navItems = [
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/admin/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/admin/gallery", label: "Gallery", icon: Image },
   { href: "/admin/cottages", label: "Cottages", icon: Home },
+  { href: "/admin/channels", label: "Channels", icon: Globe },
   { href: "/admin/content", label: "Content / Texts", icon: Languages },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
