@@ -14,9 +14,8 @@ import {
   Save,
 } from "lucide-react";
 
-const API =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
-const SERVER = process.env.SERVER_URL || "http://localhost:3001";
+const API = process.env.NEXT_PUBLIC_SERVER_URL;
+const SERVER = process.env.SERVER_URL;
 
 interface Photo {
   id: number;
