@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useContent } from "@/context/ContentContext";
 
 const API =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
@@ -30,6 +31,7 @@ const itemVariants: Variants = {
 };
 
 const GalleryPage = () => {
+  const { t } = useContent();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
@@ -116,11 +118,13 @@ const GalleryPage = () => {
             className="text-center mb-16"
           >
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Mtiskari <span className="text-green-600">Gallery</span>
+              {t("gallery_page_title", "Mtiskari Gallery")}
             </h1>
             <p className="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-              Immerse yourself in the breathtaking beauty of Mtiskari through
-              our collection of stunning photographs
+              {t(
+                "gallery_page_subtitle",
+                "Immerse yourself in the breathtaking beauty of Mtiskari through our collection of stunning photographs",
+              )}
             </p>
           </motion.div>
 
@@ -137,9 +141,14 @@ const GalleryPage = () => {
           ) : !hasPhotos ? (
             <div className="text-center py-24 text-gray-400">
               <div className="text-6xl mb-4 opacity-30">📷</div>
-              <p className="text-xl font-medium">Gallery coming soon</p>
+              <p className="text-xl font-medium">
+                {t("gallery_page_empty_title", "Gallery coming soon")}
+              </p>
               <p className="text-sm mt-2">
-                Photos will appear here once uploaded by the admin
+                {t(
+                  "gallery_page_empty_subtitle",
+                  "Photos will appear here once uploaded by the admin",
+                )}
               </p>
             </div>
           ) : (
@@ -187,7 +196,7 @@ const GalleryPage = () => {
                           </p>
                         )}
                         <span className="text-green-600 font-medium text-sm block mt-1">
-                          Click to zoom
+                          {t("gallery_page_zoom_label", "Click to zoom")}
                         </span>
                       </div>
                     </div>
@@ -223,8 +232,7 @@ const GalleryPage = () => {
             </motion.div>
           )}
 
-          {/* Gallery Stats */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
@@ -250,7 +258,7 @@ const GalleryPage = () => {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </motion.div> */}
 
           {/* CTA */}
           <motion.div
@@ -260,17 +268,19 @@ const GalleryPage = () => {
             className="text-center py-12"
           >
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Experience Mtiskari in Person
+              {t("gallery_page_cta_title", "Experience Mtiskari in Person")}
             </h3>
             <p className="text-gray-600 max-w-2xl mx-auto mb-8">
-              These photos capture just a glimpse of what awaits you. Come see
-              the beauty for yourself.
+              {t(
+                "gallery_page_cta_desc",
+                "These photos capture just a glimpse of what awaits you. Come see the beauty for yourself.",
+              )}
             </p>
             <Link
               href="/"
               className="inline-block px-8 py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-colors shadow-lg hover:shadow-xl"
             >
-              Plan Your Visit
+              {t("gallery_page_cta_btn", "Plan Your Visit")}
             </Link>
           </motion.div>
         </div>

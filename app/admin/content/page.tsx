@@ -17,8 +17,21 @@ const CONTENT_GROUPS = [
     keys: ["hero_title", "hero_subtitle", "hero_btn"],
   },
   {
-    label: "Gallery Section",
+    label: "Gallery Section (Homepage)",
     keys: ["gallery_title", "gallery_btn"],
+  },
+  {
+    label: "Gallery Page (/gallery)",
+    keys: [
+      "gallery_page_title",
+      "gallery_page_subtitle",
+      "gallery_page_empty_title",
+      "gallery_page_empty_subtitle",
+      "gallery_page_zoom_label",
+      "gallery_page_cta_title",
+      "gallery_page_cta_desc",
+      "gallery_page_cta_btn",
+    ],
   },
   {
     label: "Cottage / Features Section",
@@ -44,6 +57,14 @@ const KEY_LABELS: Record<string, string> = {
   hero_btn: "Book Button Text",
   gallery_title: "Gallery Section Title",
   gallery_btn: "Gallery Button",
+  gallery_page_title: "Gallery Page — Title",
+  gallery_page_subtitle: "Gallery Page — Subtitle",
+  gallery_page_empty_title: "Gallery Page — Empty State Title",
+  gallery_page_empty_subtitle: "Gallery Page — Empty State Subtitle",
+  gallery_page_zoom_label: "Gallery Page — Zoom Hint Label",
+  gallery_page_cta_title: "Gallery Page — CTA Title",
+  gallery_page_cta_desc: "Gallery Page — CTA Description",
+  gallery_page_cta_btn: "Gallery Page — CTA Button Text",
   cottage_title: "Cottage Section Title",
   cottage_subtitle: "Cottage Section Subtitle",
   cottage_getaway_title: "Getaway Card Title",
@@ -82,8 +103,18 @@ export default function AdminContentPage() {
       if (res.status === 401) { window.location.href = "/admin/login"; return; }
       const data = await res.json();
       if (data && typeof data === "object") {
-        setContent(data);
-        setEdited(JSON.parse(JSON.stringify(data)));
+        // Merge DB data with empty placeholders for any known keys not yet in DB
+        const allKeys = CONTENT_GROUPS.flatMap((g) => g.keys);
+        const merged: ContentMap = {};
+        for (const key of allKeys) {
+          merged[key] = data[key] ?? { en: "", ka: "" };
+        }
+        // Also include any extra keys from DB not in CONTENT_GROUPS
+        for (const [k, v] of Object.entries(data)) {
+          if (!merged[k]) merged[k] = v as { en: string; ka: string };
+        }
+        setContent(merged);
+        setEdited(JSON.parse(JSON.stringify(merged)));
       }
     } finally {
       setLoading(false);
@@ -99,16 +130,18 @@ export default function AdminContentPage() {
     }));
   };
 
-  const isDirty = JSON.stringify(content) !== JSON.stringify(edited);
+  const isDirty = JSON.stringify(
+    Object.fromEntries(Object.entries(edited).filter(([, v]) => v.en || v.ka))
+  ) !== JSON.stringify(
+    Object.fromEntries(Object.entries(content).filter(([, v]) => v.en || v.ka))
+  );
 
   const saveAll = async () => {
     setSaving(true);
     try {
-      const items = Object.entries(edited).map(([key, val]) => ({
-        key,
-        en: val.en,
-        ka: val.ka,
-      }));
+      const items = Object.entries(edited)
+        .filter(([, val]) => val.en || val.ka)
+        .map(([key, val]) => ({ key, en: val.en, ka: val.ka }));
       const res = await fetch(`${API}/content`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
