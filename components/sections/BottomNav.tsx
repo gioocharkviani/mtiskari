@@ -3,7 +3,6 @@
 import { motion, useInView, Variants } from "framer-motion";
 import { useRef } from "react";
 import {
-  AboutIcon,
   BookNowIcon,
   ContactIcon,
   CottagesIcon,
@@ -36,41 +35,22 @@ const BottomNav = () => {
   };
 
   const links = [
-    {
-      name: "Home",
-      link: "/",
-      icon: <HomeIcon />,
-    },
-    {
-      name: "Cottages",
-      link: "/#details",
-      icon: <CottagesIcon />,
-    },
-    {
-      name: "Contact",
-      link: "/#contact",
-      icon: <ContactIcon />,
-    },
-    {
-      name: "Gallery",
-      link: "/gallery",
-      icon: <GalleryIcon />,
-    },
-    {
-      name: "Book Now",
-      link: "/#hero",
-      icon: <BookNowIcon />,
-    },
+    { name: "Home", link: "/", icon: <HomeIcon /> },
+    { name: "Cottages", link: "/#details", icon: <CottagesIcon /> },
+    { name: "Contact", link: "/#contact", icon: <ContactIcon /> },
+    { name: "Gallery", link: "/gallery", icon: <GalleryIcon /> },
+    { name: "Book Now", link: "/#hero", icon: <BookNowIcon /> },
   ];
 
   return (
-    <div ref={ref} className="w-full px-5">
+    <div ref={ref} className="w-full px-6 py-10">
       <div className="max-w-[1500px] mx-auto">
+        {/* Heading */}
         <motion.div
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={containerVariants}
-          className="text-center mb-12"
+          className="text-center mb-10"
         >
           <motion.h3
             variants={staggerVariants}
@@ -80,17 +60,18 @@ const BottomNav = () => {
           </motion.h3>
           <motion.p
             variants={staggerVariants}
-            className="text-gray-600 text-lg"
+            className="text-gray-500 text-lg"
           >
             Where mountains meet comfort
           </motion.p>
         </motion.div>
 
+        {/* Nav Links */}
         <motion.div
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={containerVariants}
-          className="flex justify-center flex-wrap shrink-0"
+          className="flex flex-wrap justify-center gap-4"
         >
           {links.map((link, index) => (
             <motion.a
@@ -98,18 +79,18 @@ const BottomNav = () => {
               href={link.link}
               variants={staggerVariants}
               whileHover={{
-                scale: 1.1,
-                y: -5,
-                backgroundColor: "rgba(34, 197, 94, 0.1)",
+                scale: 1.08,
+                y: -4,
+                backgroundColor: "rgba(34, 197, 94, 0.08)",
                 borderColor: "#10B981",
               }}
               whileTap={{ scale: 0.95 }}
-              className="rounded-lg p-4 text-center border border-gray-200 cursor-pointer transition-colors hover:shadow-md group"
+              className="flex flex-col items-center gap-2 rounded-xl px-6 py-4 border border-gray-200 bg-white shadow-sm hover:shadow-md transition-colors group min-w-[90px]"
             >
-              <div className="flex justify-center mb-2 text-gray-600 group-hover:text-green-600 transition-colors">
+              <div className="text-gray-500 group-hover:text-green-600 transition-colors">
                 {link.icon}
               </div>
-              <span className="text-sm text-gray-700 font-medium group-hover:text-green-700 transition-colors">
+              <span className="text-sm font-medium text-gray-700 group-hover:text-green-700 transition-colors whitespace-nowrap">
                 {link.name}
               </span>
             </motion.a>
