@@ -15,15 +15,11 @@ interface Props {
   disabledDates?: string[];
 }
 
-const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
-  const currDate = new Date();
-  const [date, setDate] = useState(currDate);
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  // Support both controlled (value+onChange) and uncontrolled mode
-  const [internalDays, setInternalDays] = useState<BookDays>({
-    startDate: "",
-    endDate: "",
-  });
+const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
+  const [date, setDate] = useState(() => new Date());
+  const [internalDays, setInternalDays] = useState<BookDays>({ startDate: "", endDate: "" });
 
   const bookDays = value ?? internalDays;
   const setBookDays = (days: BookDays) => {
@@ -35,141 +31,119 @@ const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
   const today = nowDate(date);
 
   const nextMonth = () => {
-    const nextDate = new Date(date);
-    nextDate.setMonth(nextDate.getMonth() + 1);
-    setDate(nextDate);
+    setDate((d) => {
+      const n = new Date(d);
+      n.setMonth(n.getMonth() + 1);
+      return n;
+    });
   };
 
   const prevMonth = () => {
-    const prevDate = new Date(date);
-    prevDate.setMonth(prevDate.getMonth() - 1);
-    setDate(prevDate);
+    setDate((d) => {
+      const p = new Date(d);
+      p.setMonth(p.getMonth() - 1);
+      return p;
+    });
   };
 
-  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  const hasUnavailableBetween = (start: string, end: string) => {
-    return disabledDates.some((d) => d > start && d < end);
-  };
+  const hasUnavailableBetween = (start: string, end: string) =>
+    disabledDates.some((d) => d > start && d < end);
 
   const bookDaysHandler = (selectedDate: string) => {
-    // If no start or already have both — start fresh
     if (!bookDays.startDate || bookDays.endDate) {
       setBookDays({ startDate: selectedDate, endDate: "" });
       return;
     }
-
-    const startDate = new Date(bookDays.startDate);
-    const selected = new Date(selectedDate);
-
-    // Clicking same day — reset
     if (bookDays.startDate === selectedDate) {
       setBookDays({ startDate: "", endDate: "" });
       return;
     }
-
-    // Selected before start — restart
-    if (selected < startDate) {
+    if (new Date(selectedDate) < new Date(bookDays.startDate)) {
       setBookDays({ startDate: selectedDate, endDate: "" });
       return;
     }
-
-    // Check if any booked day falls inside the selected range
     if (hasUnavailableBetween(bookDays.startDate, selectedDate)) {
-      // restart from selected date to avoid spanning blocked days
       setBookDays({ startDate: selectedDate, endDate: "" });
       return;
     }
-
     setBookDays({ startDate: bookDays.startDate, endDate: selectedDate });
   };
 
   return (
-    <div className="max-w-[500px] bg-white px-6 pt-4 pb-2 border border-gray-100 mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="w-full bg-white px-3 sm:px-5 pt-4 pb-3 select-none">
+      {/* Month navigation */}
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-sm font-medium text-gray-500">{today.year}</span>
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold text-gray-800">
-            <p className="text-gray-500 font-medium">{today.year}</p>
-          </h1>
-        </div>
-
-        <div className="flex items-center gap-3">
           <button
             onClick={prevMonth}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none"
             aria-label="Previous month"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+            <ChevronLeft className="w-5 h-5 text-gray-600" />
           </button>
-
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-gray-800">
-              {today.monthShort}
-            </h2>
-          </div>
-
+          <span className="text-base font-semibold text-gray-800 min-w-[90px] text-center">
+            {today.monthShort}
+          </span>
           <button
             onClick={nextMonth}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none"
             aria-label="Next month"
           >
-            <ChevronRight className="w-5 h-5 text-gray-700" />
+            <ChevronRight className="w-5 h-5 text-gray-600" />
           </button>
         </div>
+        <div className="w-12" /> {/* spacer to balance the year text */}
       </div>
 
-      <div className="grid grid-cols-7 mb-3">
-        {dayNames.map((day) => (
-          <div
-            key={day}
-            className="text-center text-sm font-semibold text-gray-500 py-2"
-          >
+      {/* Day name headers */}
+      <div className="grid grid-cols-7 mb-1">
+        {DAY_NAMES.map((day) => (
+          <div key={day} className="text-center text-[10px] sm:text-xs font-semibold text-gray-400 py-1">
             {day}
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-2">
-        {dates.map((_, i) => {
-          const m = new Date(_.date).getDate();
-          const isNotInMonth = _.isNotInMonth;
-          const isToday = _.isToday;
-          const isUnavailable = disabledDates.includes(_.date);
-          const isDisable = _.isDisable || isUnavailable;
+      {/* Calendar grid — aspect-square cells fill the container width */}
+      <div className="grid grid-cols-7 gap-0.5 sm:gap-1">
+        {dates.map((cell, i) => {
+          const dayNum = new Date(cell.date).getDate();
+          const isUnavailable = disabledDates.includes(cell.date);
+          const isDisabled = cell.isDisable || isUnavailable;
           const isSelected =
-            _.date === bookDays.startDate ||
-            _.date === bookDays.endDate ||
+            cell.date === bookDays.startDate ||
+            cell.date === bookDays.endDate ||
             (bookDays.startDate &&
               bookDays.endDate &&
-              _.date > bookDays.startDate &&
-              _.date < bookDays.endDate);
+              cell.date > bookDays.startDate &&
+              cell.date < bookDays.endDate);
 
-          let baseClasses =
-            "flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 font-medium text-sm";
+          let cls =
+            "aspect-square flex items-center justify-center rounded-lg text-xs sm:text-sm font-medium transition-all duration-150";
 
-          if (isDisable) {
-            baseClasses += isUnavailable
-              ? " bg-red-50 text-red-300 cursor-not-allowed"
-              : " text-slate-200 cursor-not-allowed";
-          } else if (isToday && !isSelected) {
-            baseClasses +=
-              " text-emerald-600 hover:bg-indigo-50 hover:shadow-md cursor-pointer";
+          if (cell.isNotInMonth) {
+            cls += " invisible";
+          } else if (isUnavailable) {
+            cls += " bg-red-50 text-red-300 cursor-not-allowed";
+          } else if (isDisabled) {
+            cls += " text-gray-200 cursor-not-allowed";
           } else if (isSelected) {
-            baseClasses +=
-              " text-gray-700 bg-green-200 hover:shadow-md cursor-pointer";
+            cls += " bg-green-200 text-gray-800 cursor-pointer";
+          } else if (cell.isToday) {
+            cls += " text-emerald-600 font-bold hover:bg-gray-100 cursor-pointer";
           } else {
-            baseClasses +=
-              " text-gray-700 hover:bg-indigo-50 hover:shadow-md cursor-pointer";
+            cls += " text-gray-700 hover:bg-gray-100 cursor-pointer";
           }
 
           return (
             <div
-              className={baseClasses}
               key={i}
-              onClick={() => !isDisable && bookDaysHandler(_.date)}
+              className={cls}
+              onClick={() => !isDisabled && !cell.isNotInMonth && bookDaysHandler(cell.date)}
               title={isUnavailable ? "Not available" : undefined}
             >
-              {!isNotInMonth && <span>{m}</span>}
+              {!cell.isNotInMonth && dayNum}
             </div>
           );
         })}
