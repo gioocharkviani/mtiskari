@@ -49,6 +49,22 @@ const CONTENT_GROUPS = [
     label: "Navigation",
     keys: ["nav_home", "nav_gallery", "nav_contact"],
   },
+  {
+    label: "Calendar Page (/calendar)",
+    keys: [
+      "calendar_page_title",
+      "calendar_page_subtitle",
+      "select_cottage_label",
+      "all_cottages_label",
+      "booked_label",
+      "selected_label",
+      "available_label",
+    ],
+  },
+  {
+    label: "Booking Widget — Extra Labels",
+    keys: ["price_on_request"],
+  },
 ];
 
 const KEY_LABELS: Record<string, string> = {
@@ -81,6 +97,14 @@ const KEY_LABELS: Record<string, string> = {
   nav_home: "Nav: Home",
   nav_gallery: "Nav: Gallery",
   nav_contact: "Nav: Contact",
+  calendar_page_title: "Calendar Page — Title",
+  calendar_page_subtitle: "Calendar Page — Subtitle",
+  select_cottage_label: "Cottage Selector Label",
+  all_cottages_label: "All Cottages Option",
+  booked_label: "Legend: Not Available",
+  selected_label: "Legend: Selected",
+  available_label: "Legend: Available",
+  price_on_request: "Price on Request Text",
 };
 
 export default function AdminContentPage() {

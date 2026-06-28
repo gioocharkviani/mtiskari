@@ -82,6 +82,13 @@ export default function HeroBooking() {
       ? diffDays(bookDays.startDate, bookDays.endDate)
       : 0;
 
+  const maxGuests = selectedCottage?.maxGuests ?? 20;
+
+  // Clamp guest count if selected cottage has a lower maxGuests
+  useEffect(() => {
+    if (guestCount > maxGuests) setGuestCount(maxGuests);
+  }, [maxGuests]);
+
   const fetchAvailability = useCallback(async () => {
     const now = new Date();
     const unavailable: string[] = [];
@@ -600,17 +607,22 @@ export default function HeroBooking() {
                   <p className="text-sm font-medium text-gray-800">
                     {guestCount} {t("guests_label", "Guests")}
                   </p>
+                  {selectedCottage?.maxGuests && (
+                    <p className="text-xs text-gray-400">max {maxGuests}</p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-0.5">
                   <button
-                    onClick={() => setGuestCount((g) => Math.min(g + 1, 20))}
-                    className="p-0.5 rounded hover:bg-gray-200 transition-colors"
+                    onClick={() => setGuestCount((g) => Math.min(g + 1, maxGuests))}
+                    disabled={guestCount >= maxGuests}
+                    className="p-0.5 rounded hover:bg-gray-200 transition-colors disabled:opacity-30"
                   >
                     <ChevronUp className="w-4 h-4 text-gray-500" />
                   </button>
                   <button
                     onClick={() => setGuestCount((g) => Math.max(g - 1, 1))}
-                    className="p-0.5 rounded hover:bg-gray-200 transition-colors"
+                    disabled={guestCount <= 1}
+                    className="p-0.5 rounded hover:bg-gray-200 transition-colors disabled:opacity-30"
                   >
                     <ChevronDown className="w-4 h-4 text-gray-500" />
                   </button>

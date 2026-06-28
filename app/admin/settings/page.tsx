@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
-import { Save, Home, ToggleLeft, ToggleRight, Coins } from "lucide-react";
+import { Save, Home, ToggleLeft, ToggleRight, Coins, Layout, Image, Phone, Star } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
 
@@ -14,9 +14,22 @@ const CURRENCY_OPTIONS = [
   { code: "RUB", symbol: "₽", label: "Russian Ruble (₽)" },
 ];
 
+const SECTIONS = [
+  { key: "section_hero", label: "Hero / Booking Widget", description: "The top section with the booking form", icon: Layout },
+  { key: "section_rooms", label: "Rooms / Cottages", description: "The cottage details and features section", icon: Home },
+  { key: "section_gallery", label: "Gallery", description: "The photo gallery section", icon: Image },
+  { key: "section_contact", label: "Contact", description: "The contact form and info section", icon: Phone },
+];
+
 export default function AdminSettingsPage() {
   const [multiCottage, setMultiCottage] = useState(false);
   const [currency, setCurrency] = useState("GEL");
+  const [sections, setSections] = useState<Record<string, boolean>>({
+    section_hero: true,
+    section_rooms: true,
+    section_gallery: true,
+    section_contact: true,
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState("");
@@ -36,6 +49,12 @@ export default function AdminSettingsPage() {
         if (data && typeof data === "object") {
           setMultiCottage(data.multi_cottage_mode === "true");
           if (data.default_currency) setCurrency(data.default_currency);
+          setSections({
+            section_hero: data.section_hero !== "false",
+            section_rooms: data.section_rooms !== "false",
+            section_gallery: data.section_gallery !== "false",
+            section_contact: data.section_contact !== "false",
+          });
         }
       } finally {
         setLoading(false);
@@ -54,6 +73,7 @@ export default function AdminSettingsPage() {
           items: [
             { key: "multi_cottage_mode", value: String(multiCottage) },
             { key: "default_currency", value: currency },
+            ...SECTIONS.map((s) => ({ key: s.key, value: String(sections[s.key]) })),
           ],
         }),
       });
@@ -63,6 +83,9 @@ export default function AdminSettingsPage() {
       setSaving(false);
     }
   };
+
+  const toggleSection = (key: string) =>
+    setSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
     <AdminShell>
@@ -92,7 +115,6 @@ export default function AdminSettingsPage() {
                         <p className="font-semibold text-gray-900">Multi-Cottage Mode</p>
                         <p className="text-sm text-gray-500 mt-0.5">
                           When ON, guests see a cottage selection step before choosing dates.
-                          When OFF, the site works as a single-cottage booking site.
                         </p>
                       </div>
                       <button onClick={() => setMultiCottage((v) => !v)} className="ml-4 shrink-0">
@@ -108,14 +130,40 @@ export default function AdminSettingsPage() {
                         ? "✓  Multi-cottage mode is ON — guests will pick a cottage before booking"
                         : "○  Single-cottage mode — guests go directly to date selection"}
                     </div>
-                    {multiCottage && (
-                      <p className="mt-3 text-xs text-gray-400">
-                        Make sure you have at least 2 active cottages in{" "}
-                        <a href="/admin/cottages" className="text-green-600 underline">Cottages</a>.
-                      </p>
-                    )}
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Homepage Sections */}
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-5 py-3 bg-gray-50 border-b border-gray-100">
+                <h2 className="font-semibold text-gray-800 text-sm">Homepage Sections</h2>
+                <p className="text-xs text-gray-400 mt-0.5">Toggle which sections are visible on the site (EN & KA)</p>
+              </div>
+              <div className="divide-y divide-gray-50">
+                {SECTIONS.map((section) => {
+                  const Icon = section.icon;
+                  const isOn = sections[section.key];
+                  return (
+                    <div key={section.key} className="flex items-center gap-4 px-6 py-4">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isOn ? "bg-green-100" : "bg-gray-100"}`}>
+                        <Icon className={`w-5 h-5 ${isOn ? "text-green-700" : "text-gray-400"}`} />
+                      </div>
+                      <div className="flex-1">
+                        <p className={`font-medium ${isOn ? "text-gray-900" : "text-gray-400"}`}>{section.label}</p>
+                        <p className="text-xs text-gray-400">{section.description}</p>
+                      </div>
+                      <button onClick={() => toggleSection(section.key)}>
+                        {isOn ? (
+                          <ToggleRight className="w-9 h-9 text-green-500" />
+                        ) : (
+                          <ToggleLeft className="w-9 h-9 text-gray-300" />
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -132,7 +180,7 @@ export default function AdminSettingsPage() {
                   <div className="flex-1">
                     <p className="font-semibold text-gray-900 mb-1">Default Currency</p>
                     <p className="text-sm text-gray-500 mb-4">
-                      This currency is shown in the booking form and all admin reports.
+                      Shown in the booking form and admin reports.
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {CURRENCY_OPTIONS.map((opt) => (
@@ -150,9 +198,6 @@ export default function AdminSettingsPage() {
                         </button>
                       ))}
                     </div>
-                    <p className="mt-3 text-xs text-gray-400">
-                      Currently selected: <strong>{CURRENCY_OPTIONS.find((c) => c.code === currency)?.label}</strong>
-                    </p>
                   </div>
                 </div>
               </div>
