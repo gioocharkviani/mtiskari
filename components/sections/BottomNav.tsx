@@ -90,7 +90,7 @@ const BottomNav = () => {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={containerVariants}
-          className="grid grid-cols-2 mx-auto md:grid-cols-3 w-max lg:grid-cols-6 gap-4 mb-8"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 mx-auto"
         >
           {links.map((link, index) => (
             <motion.a
