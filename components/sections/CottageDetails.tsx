@@ -1,18 +1,57 @@
 "use client";
 
 import { motion, useInView, Variants } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import {
-  BedIcon,
-  SnowflakeIcon,
-  MountainIcon,
-} from "@/components/svg/CottageDetailsIcons";
+  Bed, Snowflake, Mountain, Wifi, Car, Flame,
+  Utensils, Star, Shield, Trees, Sun, Bath,
+} from "lucide-react";
 import { useContent } from "@/context/ContentContext";
+
+const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
+
+interface FeatureCard {
+  id: number;
+  titleEn: string;
+  titleKa: string;
+  icon: string;
+  itemsEn: string[];
+  itemsKa: string[];
+  isVisible: boolean;
+  order: number;
+}
+
+function CardIcon({ icon }: { icon: string }) {
+  const cls = "w-6 h-6";
+  const map: Record<string, React.ReactNode> = {
+    bed: <Bed className={cls} />,
+    snowflake: <Snowflake className={cls} />,
+    mountain: <Mountain className={cls} />,
+    wifi: <Wifi className={cls} />,
+    car: <Car className={cls} />,
+    flame: <Flame className={cls} />,
+    utensils: <Utensils className={cls} />,
+    star: <Star className={cls} />,
+    shield: <Shield className={cls} />,
+    trees: <Trees className={cls} />,
+    sun: <Sun className={cls} />,
+    bath: <Bath className={cls} />,
+  };
+  return <>{map[icon] ?? <Star className={cls} />}</>;
+}
 
 const CottageDetails = () => {
   const ref = useRef(null);
-  const { t } = useContent();
+  const { t, lang } = useContent();
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [cards, setCards] = useState<FeatureCard[]>([]);
+
+  useEffect(() => {
+    fetch(`${API}/feature-card`)
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data)) setCards(data); })
+      .catch(() => {});
+  }, []);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -34,23 +73,7 @@ const CottageDetails = () => {
     visible: { opacity: 1, x: 0, transition: { duration: 0.4 } },
   };
 
-  const features = [
-    {
-      category: "Rooms",
-      icon: <BedIcon />,
-      items: ["2 Bedrooms", "Kitchen", "Bathroom", "Balcony"],
-    },
-    {
-      category: "Amenities",
-      icon: <SnowflakeIcon />,
-      items: ["Air Conditioning", "Heating", "Mountain View", "All Season Access"],
-    },
-    {
-      category: "Nature",
-      icon: <MountainIcon />,
-      items: ["Mountain View", "Forest Access", "Fresh Air", "Peaceful Environment"],
-    },
-  ];
+  const visibleCards = cards.filter((c) => c.isVisible);
 
   return (
     <section
@@ -80,47 +103,57 @@ const CottageDetails = () => {
           </motion.p>
         </motion.div>
 
-        <motion.div
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
-          {features.map((section, index) => (
-            <motion.div
-              key={index}
-              variants={cardVariants}
-              whileHover={{ scale: 1.05, y: -5, transition: { duration: 0.3 } }}
-              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl cursor-pointer"
-            >
-              <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
-                <h3 className="text-2xl font-semibold text-gray-800">{section.category}</h3>
-                <div className="flex space-x-2">
-                  <motion.span whileHover={{ scale: 1.3, rotate: 5 }} transition={{ duration: 0.2 }} className="text-2xl">
-                    {section.icon}
-                  </motion.span>
-                </div>
-              </div>
-              <ul className="space-y-4">
-                {section.items.map((item, itemIndex) => (
-                  <motion.li
-                    key={itemIndex}
-                    variants={listItemVariants}
-                    whileHover={{ x: 10 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-center text-lg text-gray-700"
-                  >
-                    <motion.span
-                      whileHover={{ scale: 1.5 }}
-                      className="w-2 h-2 bg-green-500 rounded-full mr-3"
-                    />
-                    {item}
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </motion.div>
+        {visibleCards.length > 0 && (
+          <motion.div
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            variants={containerVariants}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {visibleCards.map((card) => {
+              const title = lang === "ka" ? card.titleKa : card.titleEn;
+              const items = lang === "ka" ? card.itemsKa : card.itemsEn;
+              return (
+                <motion.div
+                  key={card.id}
+                  variants={cardVariants}
+                  whileHover={{ scale: 1.05, y: -5, transition: { duration: 0.3 } }}
+                  className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl cursor-pointer"
+                >
+                  <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <h3 className="text-2xl font-semibold text-gray-800">{title}</h3>
+                    <div className="flex space-x-2">
+                      <motion.span
+                        whileHover={{ scale: 1.3, rotate: 5 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-2xl text-gray-600"
+                      >
+                        <CardIcon icon={card.icon} />
+                      </motion.span>
+                    </div>
+                  </div>
+                  <ul className="space-y-4">
+                    {items.map((item, idx) => (
+                      <motion.li
+                        key={idx}
+                        variants={listItemVariants}
+                        whileHover={{ x: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex items-center text-lg text-gray-700"
+                      >
+                        <motion.span
+                          whileHover={{ scale: 1.5 }}
+                          className="w-2 h-2 bg-green-500 rounded-full mr-3 shrink-0"
+                        />
+                        {item}
+                      </motion.li>
+                    ))}
+                  </ul>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        )}
 
         <motion.div
           initial="hidden"
