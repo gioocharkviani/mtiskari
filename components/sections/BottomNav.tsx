@@ -38,26 +38,27 @@ const BottomNav = () => {
   const links = [
     {
       name: "Home",
+      link: "/",
       icon: <HomeIcon />,
     },
     {
       name: "Cottages",
+      link: "/#details",
       icon: <CottagesIcon />,
     },
     {
-      name: "About",
-      icon: <AboutIcon />,
-    },
-    {
       name: "Contact",
+      link: "/#contact",
       icon: <ContactIcon />,
     },
     {
       name: "Gallery",
+      link: "/gallery",
       icon: <GalleryIcon />,
     },
     {
       name: "Book Now",
+      link: "/#hero",
       icon: <BookNowIcon />,
     },
   ];

@@ -9,7 +9,11 @@ const Hero = () => {
 
   const backgroundVariants: Variants = {
     hidden: { scale: 1.1, opacity: 0 },
-    visible: { scale: 1, opacity: 1, transition: { duration: 1, ease: "easeOut" } },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: { duration: 1, ease: "easeOut" },
+    },
   };
 
   const overlayVariants = {
@@ -18,7 +22,10 @@ const Hero = () => {
   };
 
   return (
-    <section className="w-full flex justify-center min-h-screen relative">
+    <section
+      id="hero"
+      className="w-full flex justify-center min-h-screen relative"
+    >
       <motion.div
         className="w-full h-full absolute hero-bg bg-position-[calc(100%+0px)_center]! bg-cover! md:bg-center! z-1"
         variants={backgroundVariants}

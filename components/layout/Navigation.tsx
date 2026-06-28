@@ -16,7 +16,6 @@ const navigationItems: NavigationItem[] = [
   { id: 1, link: "/", titleGE: "მთავარი", titleEN: "Home" },
   { id: 14, link: "/#details", titleGE: "დეტალები", titleEN: "Details" },
   { id: 2, link: "/gallery", titleGE: "გალერეა", titleEN: "Gallery" },
-  { id: 3, link: "/#activites", titleGE: "აქტივობები", titleEN: "Activities" },
   { id: 4, link: "/#contact", titleGE: "კონტაქტი", titleEN: "Contact" },
 ];
 
@@ -49,21 +48,35 @@ const Navigation = () => {
   const itemVariants: Variants = {
     hidden: { opacity: 0, y: -20 },
     visible: (i: number) => ({
-      opacity: 1, y: 0,
+      opacity: 1,
+      y: 0,
       transition: { delay: i * 0.1 + 0.5, duration: 0.6, ease: "easeOut" },
     }),
-    hover: { scale: 1.1, color: "#87986A", transition: { duration: 0.2, ease: "easeInOut" } },
+    hover: {
+      scale: 1.1,
+      color: "#87986A",
+      transition: { duration: 0.2, ease: "easeInOut" },
+    },
   };
 
   const mobileMenuVariants: Variants = {
-    closed: { opacity: 0, scale: 0.95, transition: { duration: 0.2, ease: "easeInOut" } },
-    open: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
+    closed: {
+      opacity: 0,
+      scale: 0.95,
+      transition: { duration: 0.2, ease: "easeInOut" },
+    },
+    open: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
   };
 
   const mobileItemVariants: Variants = {
     closed: { opacity: 0, x: -20 },
     open: (i: number) => ({
-      opacity: 1, x: 0,
+      opacity: 1,
+      x: 0,
       transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" },
     }),
   };
@@ -135,7 +148,9 @@ const Navigation = () => {
           <motion.span
             style={{ background: textColor }}
             className="w-6 h-0.5 block absolute"
-            animate={isMobileMenuOpen ? { rotate: 45, y: 0 } : { rotate: 0, y: -6 }}
+            animate={
+              isMobileMenuOpen ? { rotate: 45, y: 0 } : { rotate: 0, y: -6 }
+            }
             transition={{ duration: 0.3 }}
           />
           <motion.span
@@ -147,7 +162,9 @@ const Navigation = () => {
           <motion.span
             style={{ background: textColor }}
             className="w-6 h-0.5 block absolute"
-            animate={isMobileMenuOpen ? { rotate: -45, y: 0 } : { rotate: 0, y: 6 }}
+            animate={
+              isMobileMenuOpen ? { rotate: -45, y: 0 } : { rotate: 0, y: 6 }
+            }
             transition={{ duration: 0.3 }}
           />
         </motion.button>
