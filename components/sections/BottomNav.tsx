@@ -90,12 +90,12 @@ const BottomNav = () => {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={containerVariants}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 mx-auto"
+          className="flex justify-center flex-wrap shrink-0"
         >
           {links.map((link, index) => (
             <motion.a
               key={index}
-              href="#"
+              href={link.link}
               variants={staggerVariants}
               whileHover={{
                 scale: 1.1,
