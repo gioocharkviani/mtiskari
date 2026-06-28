@@ -85,37 +85,36 @@ const BottomNav = () => {
             Where mountains meet comfort
           </motion.p>
         </motion.div>
-        <div className="w-full flex justify-center">
-          <motion.div
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            className="grid grid-cols-2 md:grid-cols-3 w-max lg:grid-cols-6 gap-4 mb-8"
-          >
-            {links.map((link, index) => (
-              <motion.a
-                key={index}
-                href="#"
-                variants={staggerVariants}
-                whileHover={{
-                  scale: 1.1,
-                  y: -5,
-                  backgroundColor: "rgba(34, 197, 94, 0.1)",
-                  borderColor: "#10B981",
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="rounded-lg p-4 text-center border border-gray-200 cursor-pointer transition-colors hover:shadow-md group"
-              >
-                <div className="flex justify-center mb-2 text-gray-600 group-hover:text-green-600 transition-colors">
-                  {link.icon}
-                </div>
-                <span className="text-sm text-gray-700 font-medium group-hover:text-green-700 transition-colors">
-                  {link.name}
-                </span>
-              </motion.a>
-            ))}
-          </motion.div>
-        </div>
+
+        <motion.div
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={containerVariants}
+          className="grid grid-cols-2 mx-auto md:grid-cols-3 w-max lg:grid-cols-6 gap-4 mb-8"
+        >
+          {links.map((link, index) => (
+            <motion.a
+              key={index}
+              href="#"
+              variants={staggerVariants}
+              whileHover={{
+                scale: 1.1,
+                y: -5,
+                backgroundColor: "rgba(34, 197, 94, 0.1)",
+                borderColor: "#10B981",
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="rounded-lg p-4 text-center border border-gray-200 cursor-pointer transition-colors hover:shadow-md group"
+            >
+              <div className="flex justify-center mb-2 text-gray-600 group-hover:text-green-600 transition-colors">
+                {link.icon}
+              </div>
+              <span className="text-sm text-gray-700 font-medium group-hover:text-green-700 transition-colors">
+                {link.name}
+              </span>
+            </motion.a>
+          ))}
+        </motion.div>
       </div>
     </div>
   );
