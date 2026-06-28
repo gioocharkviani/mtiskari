@@ -227,6 +227,12 @@ export default function AdminBookingsPage() {
   const [showExternal, setShowExternal] = useState(false);
   const [updatingPayment, setUpdatingPayment] = useState(false);
   const [paymentForm, setPaymentForm] = useState({ paymentStatus: "", paymentType: "" });
+  const [toast, setToast] = useState<{ msg: string; type: "success" | "info" } | null>(null);
+
+  const showToast = (msg: string, type: "success" | "info" = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -273,16 +279,21 @@ export default function AdminBookingsPage() {
   }, [selected]);
 
   const updateStatus = async (id: number, status: string) => {
+    const prev = bookings.find((b) => b.id === id);
     setUpdating(id);
     try {
-      await fetch(`${API}/booking/${id}/status`, {
+      const res = await fetch(`${API}/booking/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ status }),
       });
-      setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, bookingStatus: status } : b)));
+      if (!res.ok) { showToast("Failed to update status", "info"); return; }
+      setBookings((bList) => bList.map((b) => (b.id === id ? { ...b, bookingStatus: status } : b)));
       if (selected?.id === id) setSelected((s) => s ? { ...s, bookingStatus: status } : s);
+      if (status === "CONFIRMED" && prev?.bookingStatus !== "CONFIRMED") {
+        showToast("Booking confirmed — confirmation email sent to guest");
+      }
     } finally {
       setUpdating(null);
     }
@@ -607,6 +618,12 @@ export default function AdminBookingsPage() {
           onClose={() => setShowExternal(false)}
           onSaved={fetchBookings}
         />
+      )}
+
+      {toast && (
+        <div className={`fixed bottom-6 right-6 z-[9999] px-5 py-3 rounded-xl shadow-lg text-sm font-medium text-white transition-all ${toast.type === "success" ? "bg-green-700" : "bg-gray-700"}`}>
+          {toast.msg}
+        </div>
       )}
     </AdminShell>
   );
