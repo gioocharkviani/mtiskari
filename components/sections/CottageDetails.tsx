@@ -64,7 +64,7 @@ const CottageDetails = () => {
   };
 
   return (
-    <section id="details" ref={ref} className="w-full py-20 px-5 flex justify-center mt-[100px] relative">
+    <section id="details" ref={ref} className="w-full py-20 px-5 flex justify-center relative">
       <div className="bg3 bg-fixed! bg-bottom-left absolute opacity-[0.03] inset-0 bg-cover -z-10" />
       <div className="max-w-[1500px] w-full">
         <motion.div

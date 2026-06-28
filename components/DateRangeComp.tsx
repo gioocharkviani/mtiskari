@@ -70,43 +70,45 @@ const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
   };
 
   return (
-    <div className="w-full bg-white px-3 sm:px-5 pt-4 pb-3 select-none">
+    <div className="bg-white px-4 sm:px-6 pt-4 pb-2 border border-gray-100 mx-auto">
       {/* Month navigation */}
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-sm font-medium text-gray-500">{today.year}</span>
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-gray-500 font-medium text-sm">{today.year}</h2>
+
+        <div className="flex items-center gap-3">
           <button
             onClick={prevMonth}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none"
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none"
             aria-label="Previous month"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
+            <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
-          <span className="text-base font-semibold text-gray-800 min-w-[90px] text-center">
+          <h2 className="text-xl font-semibold text-gray-800 min-w-20 text-center">
             {today.monthShort}
-          </span>
+          </h2>
           <button
             onClick={nextMonth}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none"
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none"
             aria-label="Next month"
           >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
+            <ChevronRight className="w-5 h-5 text-gray-700" />
           </button>
         </div>
-        <div className="w-12" /> {/* spacer to balance the year text */}
+
+        <div className="w-10" />
       </div>
 
       {/* Day name headers */}
-      <div className="grid grid-cols-7 mb-1">
+      <div className="grid grid-cols-7 mb-3">
         {DAY_NAMES.map((day) => (
-          <div key={day} className="text-center text-[10px] sm:text-xs font-semibold text-gray-400 py-1">
+          <div key={day} className="text-center text-sm font-semibold text-gray-500 py-2">
             {day}
           </div>
         ))}
       </div>
 
-      {/* Calendar grid — aspect-square cells fill the container width */}
-      <div className="grid grid-cols-7 gap-0.5 sm:gap-1">
+      {/* Calendar grid — w-9/h-9 on mobile, w-12/h-12 on sm+ */}
+      <div className="grid grid-cols-7 gap-1 sm:gap-2">
         {dates.map((cell, i) => {
           const dayNum = new Date(cell.date).getDate();
           const isUnavailable = disabledDates.includes(cell.date);
@@ -114,26 +116,26 @@ const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
           const isSelected =
             cell.date === bookDays.startDate ||
             cell.date === bookDays.endDate ||
-            (bookDays.startDate &&
-              bookDays.endDate &&
+            (!!bookDays.startDate &&
+              !!bookDays.endDate &&
               cell.date > bookDays.startDate &&
               cell.date < bookDays.endDate);
 
           let cls =
-            "aspect-square flex items-center justify-center rounded-lg text-xs sm:text-sm font-medium transition-all duration-150";
+            "flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 rounded-xl transition-all duration-200 font-medium text-xs sm:text-sm";
 
           if (cell.isNotInMonth) {
             cls += " invisible";
           } else if (isUnavailable) {
             cls += " bg-red-50 text-red-300 cursor-not-allowed";
           } else if (isDisabled) {
-            cls += " text-gray-200 cursor-not-allowed";
+            cls += " text-slate-200 cursor-not-allowed";
           } else if (isSelected) {
-            cls += " bg-green-200 text-gray-800 cursor-pointer";
+            cls += " text-gray-700 bg-green-200 hover:shadow-md cursor-pointer";
           } else if (cell.isToday) {
-            cls += " text-emerald-600 font-bold hover:bg-gray-100 cursor-pointer";
+            cls += " text-emerald-600 hover:bg-indigo-50 hover:shadow-md cursor-pointer font-bold";
           } else {
-            cls += " text-gray-700 hover:bg-gray-100 cursor-pointer";
+            cls += " text-gray-700 hover:bg-indigo-50 hover:shadow-md cursor-pointer";
           }
 
           return (
@@ -143,7 +145,7 @@ const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
               onClick={() => !isDisabled && !cell.isNotInMonth && bookDaysHandler(cell.date)}
               title={isUnavailable ? "Not available" : undefined}
             >
-              {!cell.isNotInMonth && dayNum}
+              {!cell.isNotInMonth && <span>{dayNum}</span>}
             </div>
           );
         })}
