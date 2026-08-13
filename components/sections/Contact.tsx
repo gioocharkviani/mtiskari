@@ -317,13 +317,13 @@ const Contact = () => {
               <div className="rounded-xl overflow-hidden h-64 bg-gray-200">
                 {/* Google Maps Embed */}
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d23818.112246258!2d43.367496!3d42.407566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDLCsDI0JzI3LjIiTiA0M8KwMjInMDMuMCJF!5e0!3m2!1sen!2sge!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d35772.57061168613!2d43.47169876098632!3d42.636231911064776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x405b11004a639815%3A0x6931362d786d56ff!2zTXRpc2thcmkgY290dGFnZS3hg5vhg5fhg5jhg6Hhg5nhg5Dhg6Dhg5gg4YOZ4YOd4YOi4YOU4YOv4YOY!5e1!3m2!1sen!2sge!4v1786645769731!5m2!1sen!2sge"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   title="Mtiskari Cottage Location"
                   className="rounded-lg"
                 ></iframe>
