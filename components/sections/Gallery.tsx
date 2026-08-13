@@ -1,13 +1,10 @@
 "use client";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useRef, useEffect, useState } from "react";
 import { motion, Variants, useInView } from "framer-motion";
+import { ImageIcon } from "lucide-react";
 import { useContent } from "@/context/ContentContext";
-import test1 from "../../public/test/1.jpg";
-import test2 from "../../public/test/2.jpg";
-import test3 from "../../public/test/3.jpg";
-import test4 from "../../public/test/4.jpg";
 
 const API =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://205.209.110.121:3350/api/v1";
@@ -22,10 +19,9 @@ interface ApiPhoto {
 
 interface ImageItem {
   id: number;
-  src: string | StaticImageData;
+  src: string;
   alt: string;
   colSpan: string;
-  isExternal?: boolean;
 }
 
 const COL_SPANS = [
@@ -35,12 +31,10 @@ const COL_SPANS = [
   "md:col-span-3",
 ];
 
-const fallbackImages: ImageItem[] = [
-  { id: 1, src: test1, alt: "Mtiskari landscape 1", colSpan: COL_SPANS[0] },
-  { id: 2, src: test2, alt: "Mtiskari landscape 2", colSpan: COL_SPANS[1] },
-  { id: 3, src: test3, alt: "Mtiskari landscape 3", colSpan: COL_SPANS[2] },
-  { id: 4, src: test4, alt: "Mtiskari landscape 4", colSpan: COL_SPANS[3] },
-];
+const placeholderSlots = COL_SPANS.map((colSpan, idx) => ({
+  id: idx + 1,
+  colSpan,
+}));
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -85,7 +79,7 @@ const AnimatedSection: React.FC<{
 
 const Gallery: React.FC = () => {
   const { t } = useContent();
-  const [images, setImages] = useState<ImageItem[]>(fallbackImages);
+  const [images, setImages] = useState<ImageItem[]>([]);
 
   useEffect(() => {
     fetch(`${API}/file/gallery`)
@@ -97,7 +91,6 @@ const Gallery: React.FC = () => {
             src: `${SERVER}${photo.url}`,
             alt: photo.title || photo.originalName,
             colSpan: COL_SPANS[idx % 4],
-            isExternal: true,
           }));
           setImages(mapped);
         }
@@ -129,27 +122,36 @@ const Gallery: React.FC = () => {
 
           <AnimatedSection className="w-full mt-6 overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-5 w-full">
-              {images.map((img) => (
-                <motion.div
-                  key={img.id}
-                  variants={imageVariants}
-                  className={`relative overflow-hidden rounded-4xl h-[300px] ${img.colSpan} group`}
-                  whileHover={{
-                    scale: 1.02,
-                    transition: { duration: 0.3, ease: "easeInOut" },
-                  }}
-                >
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
-                    {...(!img.isExternal && { placeholder: "blur" })}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 60vw"
-                    unoptimized={img.isExternal}
-                  />
-                </motion.div>
-              ))}
+              {images.length > 0
+                ? images.map((img) => (
+                    <motion.div
+                      key={img.id}
+                      variants={imageVariants}
+                      className={`relative overflow-hidden rounded-4xl h-[300px] ${img.colSpan} group`}
+                      whileHover={{
+                        scale: 1.02,
+                        transition: { duration: 0.3, ease: "easeInOut" },
+                      }}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 60vw"
+                        unoptimized
+                      />
+                    </motion.div>
+                  ))
+                : placeholderSlots.map((slot) => (
+                    <motion.div
+                      key={slot.id}
+                      variants={imageVariants}
+                      className={`relative overflow-hidden rounded-4xl h-[300px] ${slot.colSpan} bg-gray-100 flex items-center justify-center`}
+                    >
+                      <ImageIcon className="w-10 h-10 text-gray-300" />
+                    </motion.div>
+                  ))}
             </div>
           </AnimatedSection>
         </div>
