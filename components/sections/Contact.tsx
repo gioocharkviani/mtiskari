@@ -221,7 +221,7 @@ const Contact = () => {
                 </div>
               )}
 
-              <Button variant="customGreen" className="w-full" disabled={sending}>
+              <Button type="submit" variant="customGreen" className="w-full" disabled={sending}>
                 {sending ? "Sending..." : sent ? "Message Sent ✓" : "Send Message"}
               </Button>
             </form>
