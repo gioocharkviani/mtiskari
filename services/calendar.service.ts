@@ -4,7 +4,7 @@ export const getCalendarDays = async (month: number, year: number) => {
   }
   try {
     const res = await fetch(
-      `${process.env.SERVER_URL}/calendar?year=${year}&month=${month}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/calendar?year=${year}&month=${month}`,
     );
     return res.json();
   } catch (error) {

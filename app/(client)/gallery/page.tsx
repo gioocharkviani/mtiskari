@@ -7,7 +7,7 @@ import { useContent } from "@/context/ContentContext";
 
 const API =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://205.209.110.121:3350/api/v1";
-const SERVER = process.env.SERVER_URL || "http://205.209.110.121:3350";
+const SERVER = API.replace(/\/api\/v1\/?$/, "");
 
 interface Photo {
   id: number;
