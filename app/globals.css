@@ -18,6 +18,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Noto Sans Georgian renders visibly larger/taller than Outfit at the
+   same font-size, which overflows containers sized for Latin text.
+   Scale the root size down slightly and allow wrapping when Georgian
+   is the active language. */
+html[lang="ka"] {
+  font-size: 93.75%;
+}
+
+html[lang="ka"] body {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
 .hero-bg {
   background: var(--hero-background);
 }

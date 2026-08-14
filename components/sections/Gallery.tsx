@@ -108,7 +108,7 @@ const Gallery: React.FC = () => {
           <AnimatedSection className="flex w-full flex-col gap-3 items-center justify-center">
             <motion.span
               variants={itemVariants}
-              className="font-extrabold text-center text-[42px] w-full leading-12"
+              className="font-extrabold text-center text-3xl md:text-[42px] w-full leading-tight px-2"
             >
               {t("gallery_title", "Discover the Beauty of Mtiskari")}
             </motion.span>
