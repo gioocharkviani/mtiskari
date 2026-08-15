@@ -37,7 +37,8 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
@@ -52,10 +53,10 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     images: [
       {
-        url: "/og.png",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: SITE_NAME,
+        alt: "Mtiskari A-frame cottage in Utsera, Racha, Georgia",
       },
     ],
   },
@@ -63,7 +64,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_NAME,
     description: DESCRIPTION,
-    images: ["/og.png"],
+    images: ["/og-image.jpg"],
   },
 };
 
@@ -71,11 +72,15 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LodgingBusiness",
   name: "Mtiskari",
-  image: `${SITE_URL}/og.png`,
+  image: [`${SITE_URL}/og-image.jpg`, `${SITE_URL}/hero-bg.jpg`, `${SITE_URL}/og.png`],
   url: SITE_URL,
   description: DESCRIPTION,
+  telephone: "+995551093809",
+  email: "metreveliteona@yahoo.com",
   address: {
     "@type": "PostalAddress",
+    addressLocality: "Utsera",
+    addressRegion: "Racha-Lechkhumi and Kvemo Svaneti",
     addressCountry: "GE",
   },
 };
