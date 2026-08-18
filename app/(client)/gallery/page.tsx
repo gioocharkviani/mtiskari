@@ -1,8 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useContent } from "@/context/ContentContext";
 
 const API =
@@ -34,8 +35,29 @@ const GalleryPage = () => {
   const { t } = useContent();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+
+  const selectedPhoto = selectedIndex !== null ? photos[selectedIndex] : null;
+
+  const goPrev = useCallback(() => {
+    setSelectedIndex((i) => (i === null ? null : (i - 1 + photos.length) % photos.length));
+  }, [photos.length]);
+
+  const goNext = useCallback(() => {
+    setSelectedIndex((i) => (i === null ? null : (i + 1) % photos.length));
+  }, [photos.length]);
+
+  useEffect(() => {
+    if (selectedIndex === null) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedIndex(null);
+      if (e.key === "ArrowLeft") goPrev();
+      if (e.key === "ArrowRight") goNext();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selectedIndex, goPrev, goNext]);
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -64,7 +86,7 @@ const GalleryPage = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-            onClick={() => setSelectedPhoto(null)}
+            onClick={() => setSelectedIndex(null)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -75,12 +97,31 @@ const GalleryPage = () => {
             >
               <button
                 className="absolute -top-10 right-0 text-white/70 hover:text-white text-3xl leading-none z-10"
-                onClick={() => setSelectedPhoto(null)}
+                onClick={() => setSelectedIndex(null)}
               >
                 ×
               </button>
 
-              <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-gray-900">
+              {photos.length > 1 && (
+                <>
+                  <button
+                    onClick={goPrev}
+                    aria-label="Previous photo"
+                    className="absolute left-0 sm:-left-16 top-1/2 -translate-y-1/2 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={goNext}
+                    aria-label="Next photo"
+                    className="absolute right-0 sm:-right-16 top-1/2 -translate-y-1/2 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+
+              <div className="relative w-full h-[75vh] rounded-2xl overflow-hidden">
                 {hasPhotos && (
                   <Image
                     src={`${SERVER}${selectedPhoto.url}`}
@@ -158,12 +199,12 @@ const GalleryPage = () => {
               animate="visible"
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
             >
-              {photos.map((photo) => (
+              {photos.map((photo, index) => (
                 <motion.div
                   key={photo.id}
                   variants={itemVariants}
                   className="group relative cursor-pointer"
-                  onClick={() => setSelectedPhoto(photo)}
+                  onClick={() => setSelectedIndex(index)}
                   onMouseEnter={() => setHoveredId(photo.id)}
                   onMouseLeave={() => setHoveredId(null)}
                 >

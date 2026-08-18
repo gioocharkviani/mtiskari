@@ -12,6 +12,9 @@ import {
   X,
   Edit2,
   Save,
+  ChevronLeft,
+  ChevronRight,
+  Star,
 } from "lucide-react";
 
 const API =
@@ -178,6 +181,39 @@ export default function AdminGalleryPage() {
     setEditDesc(photo.description || "");
   };
 
+  const movePhoto = async (index: number, direction: -1 | 1) => {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= photos.length) return;
+
+    const current = photos[index];
+    const target = photos[targetIndex];
+
+    const updated = [...photos];
+    updated[index] = { ...target, order: current.order };
+    updated[targetIndex] = { ...current, order: target.order };
+    setPhotos(updated);
+
+    try {
+      await Promise.all([
+        fetch(`${API}/file/gallery/${current.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ order: target.order }),
+        }),
+        fetch(`${API}/file/gallery/${target.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ order: current.order }),
+        }),
+      ]);
+    } catch {
+      showToast("Reorder failed");
+      fetchPhotos();
+    }
+  };
+
   return (
     <AdminShell>
       <div className="space-y-6">
@@ -186,7 +222,8 @@ export default function AdminGalleryPage() {
             <h1 className="text-2xl font-bold text-gray-900">Gallery</h1>
             <p className="text-gray-500 text-sm mt-1">
               {photos.length} photo{photos.length !== 1 ? "s" : ""} ·{" "}
-              {photos.filter((p) => p.isVisible).length} visible
+              {photos.filter((p) => p.isVisible).length} visible · first 4 shown
+              on homepage
             </p>
           </div>
           <button
@@ -278,7 +315,7 @@ export default function AdminGalleryPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {photos.map((photo) => (
+            {photos.map((photo, index) => (
               <div
                 key={photo.id}
                 className={`bg-white rounded-xl overflow-hidden border shadow-sm group transition-all ${
@@ -306,7 +343,35 @@ export default function AdminGalleryPage() {
                       </span>
                     </div>
                   )}
+                  {index < 4 && (
+                    <div className="absolute top-2 left-2 flex items-center gap-1 bg-green-600 text-white text-[10px] font-semibold px-2 py-1 rounded-full">
+                      <Star className="w-3 h-3 fill-current" />
+                      Homepage
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                </div>
+
+                <div className="flex items-center justify-between px-3 pt-2">
+                  <button
+                    onClick={() => movePhoto(index, -1)}
+                    disabled={index === 0}
+                    className="p-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    title="Move earlier"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="text-[10px] text-gray-400 font-medium">
+                    #{index + 1}
+                  </span>
+                  <button
+                    onClick={() => movePhoto(index, 1)}
+                    disabled={index === photos.length - 1}
+                    className="p-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    title="Move later"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
 
                 {editId === photo.id ? (
