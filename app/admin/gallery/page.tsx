@@ -464,14 +464,13 @@ export default function AdminGalleryPage() {
             >
               ×
             </button>
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
-              <Image
+            <div className="flex items-center justify-center rounded-2xl overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={`${SERVER}${preview.url}`}
                 alt={preview.title || preview.originalName}
-                fill
-                className="object-contain"
-                sizes="90vw"
-                unoptimized
+                className="w-auto h-auto max-w-full rounded-2xl"
+                style={{ maxHeight: "75vh" }}
               />
             </div>
             <div className="mt-3 text-center">

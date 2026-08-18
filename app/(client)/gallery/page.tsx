@@ -121,15 +121,14 @@ const GalleryPage = () => {
                 </>
               )}
 
-              <div className="relative w-full h-[75vh] rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-center rounded-2xl overflow-hidden">
                 {hasPhotos && (
-                  <Image
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
                     src={`${SERVER}${selectedPhoto.url}`}
                     alt={selectedPhoto.title || selectedPhoto.originalName}
-                    fill
-                    className="object-contain"
-                    sizes="90vw"
-                    unoptimized
+                    className="w-auto h-auto max-w-full rounded-2xl"
+                    style={{ maxHeight: "75vh" }}
                   />
                 )}
               </div>
