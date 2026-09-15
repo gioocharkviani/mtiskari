@@ -267,6 +267,17 @@ export default function AdminBookingsPage() {
     fetchBookings();
     fetchChannels();
     fetchCurrency();
+
+    const params = new URLSearchParams(window.location.search);
+    const confirmed = params.get("confirmed");
+    const confirmError = params.get("confirmError");
+    if (confirmed) {
+      showToast(`Booking #${confirmed} confirmed successfully`, "success");
+      window.history.replaceState({}, "", window.location.pathname);
+    } else if (confirmError) {
+      showToast(`Failed to confirm booking #${confirmError} — it may already be confirmed or the link expired`, "info");
+      window.history.replaceState({}, "", window.location.pathname);
+    }
   }, []);
 
   useEffect(() => {

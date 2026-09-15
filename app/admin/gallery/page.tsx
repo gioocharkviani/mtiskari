@@ -48,6 +48,8 @@ export default function AdminGalleryPage() {
   const [uploadTitle, setUploadTitle] = useState("");
   const [uploadDesc, setUploadDesc] = useState("");
   const [dragOver, setDragOver] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -214,6 +216,58 @@ export default function AdminGalleryPage() {
     }
   };
 
+  const reorderPhotos = async (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex) return;
+
+    const reordered = [...photos];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, moved);
+
+    // Reassign sequential order values based on new position
+    const withOrder = reordered.map((p, i) => ({ ...p, order: i }));
+    setPhotos(withOrder);
+
+    try {
+      await Promise.all(
+        withOrder.map((p) =>
+          fetch(`${API}/file/gallery/${p.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ order: p.order }),
+          }),
+        ),
+      );
+      showToast("Order updated");
+    } catch {
+      showToast("Reorder failed");
+      fetchPhotos();
+    }
+  };
+
+  const handlePhotoDragStart = (index: number) => (e: React.DragEvent) => {
+    setDragIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handlePhotoDragOver = (index: number) => (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (index !== overIndex) setOverIndex(index);
+  };
+
+  const handlePhotoDrop = (index: number) => (e: React.DragEvent) => {
+    e.preventDefault();
+    if (dragIndex !== null) reorderPhotos(dragIndex, index);
+    setDragIndex(null);
+    setOverIndex(null);
+  };
+
+  const handlePhotoDragEnd = () => {
+    setDragIndex(null);
+    setOverIndex(null);
+  };
+
   return (
     <AdminShell>
       <div className="space-y-6">
@@ -223,7 +277,7 @@ export default function AdminGalleryPage() {
             <p className="text-gray-500 text-sm mt-1">
               {photos.length} photo{photos.length !== 1 ? "s" : ""} ·{" "}
               {photos.filter((p) => p.isVisible).length} visible · first 4 shown
-              on homepage
+              on homepage · drag a photo to reorder
             </p>
           </div>
           <button
@@ -318,10 +372,19 @@ export default function AdminGalleryPage() {
             {photos.map((photo, index) => (
               <div
                 key={photo.id}
-                className={`bg-white rounded-xl overflow-hidden border shadow-sm group transition-all ${
+                draggable
+                onDragStart={handlePhotoDragStart(index)}
+                onDragOver={handlePhotoDragOver(index)}
+                onDrop={handlePhotoDrop(index)}
+                onDragEnd={handlePhotoDragEnd}
+                className={`bg-white rounded-xl overflow-hidden border shadow-sm group transition-all cursor-grab active:cursor-grabbing ${
                   photo.isVisible
                     ? "border-gray-100"
                     : "border-orange-200 opacity-70"
+                } ${dragIndex === index ? "opacity-40" : ""} ${
+                  overIndex === index && dragIndex !== null && dragIndex !== index
+                    ? "ring-2 ring-green-500"
+                    : ""
                 }`}
               >
                 <div
