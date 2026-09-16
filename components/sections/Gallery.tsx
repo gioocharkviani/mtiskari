@@ -139,7 +139,6 @@ const Gallery: React.FC = () => {
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 60vw"
-                        unoptimized
                       />
                     </motion.div>
                   ))

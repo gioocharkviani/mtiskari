@@ -13,11 +13,12 @@ interface Props {
   value?: BookDays;
   onChange?: (days: BookDays) => void;
   disabledDates?: string[];
+  dayPrices?: Record<string, number>;
 }
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
+const DateRangeComp = ({ value, onChange, disabledDates = [], dayPrices }: Props) => {
   const [date, setDate] = useState(() => new Date());
   const [internalDays, setInternalDays] = useState<BookDays>({ startDate: "", endDate: "" });
 
@@ -121,8 +122,10 @@ const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
               cell.date > bookDays.startDate &&
               cell.date < bookDays.endDate);
 
+          const price = dayPrices?.[cell.date];
+
           let cls =
-            "flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 rounded-xl transition-all duration-200 font-medium text-xs sm:text-sm";
+            "relative flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 rounded-xl transition-all duration-200 font-medium text-xs sm:text-sm";
 
           if (cell.isNotInMonth) {
             cls += " invisible";
@@ -146,6 +149,11 @@ const DateRangeComp = ({ value, onChange, disabledDates = [] }: Props) => {
               title={isUnavailable ? "Not available" : undefined}
             >
               {!cell.isNotInMonth && <span>{dayNum}</span>}
+              {!cell.isNotInMonth && !!price && (
+                <span className="absolute bottom-0.5 right-1 text-[7px] sm:text-[9px] leading-none font-normal text-gray-400">
+                  {price}
+                </span>
+              )}
             </div>
           );
         })}

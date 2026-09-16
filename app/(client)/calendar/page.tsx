@@ -18,6 +18,7 @@ export default function CalendarPage() {
   const [cottages, setCottages] = useState<Cottage[]>([]);
   const [selectedCottageId, setSelectedCottageId] = useState<number | null>(null);
   const [unavailableDates, setUnavailableDates] = useState<string[]>([]);
+  const [dayPrices, setDayPrices] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   // Load settings + cottages
@@ -47,6 +48,7 @@ export default function CalendarPage() {
     try {
       const now = new Date();
       const unavailable: string[] = [];
+      const prices: Record<string, number> = {};
       const cottageParam = (multiCottageMode && selectedCottageId) ? `&cottageId=${selectedCottageId}` : "";
       for (let i = 0; i < 6; i++) {
         const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
@@ -56,13 +58,15 @@ export default function CalendarPage() {
           );
           const data = await res.json();
           if (data.success && data.data?.days) {
-            data.data.days.forEach((day: { date: string; isBooked?: boolean; isBlocked?: boolean }) => {
+            data.data.days.forEach((day: { date: string; isBooked?: boolean; isBlocked?: boolean; price?: number }) => {
               if (day.isBooked || day.isBlocked) unavailable.push(day.date);
+              if (day.price) prices[day.date] = day.price;
             });
           }
         } catch {}
       }
       setUnavailableDates(unavailable);
+      setDayPrices(prices);
     } finally {
       setLoading(false);
     }
@@ -134,7 +138,7 @@ export default function CalendarPage() {
           <div className="h-80 bg-gray-100 rounded-xl animate-pulse" />
         ) : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <DateRangeComp disabledDates={unavailableDates} />
+            <DateRangeComp disabledDates={unavailableDates} dayPrices={dayPrices} />
           </div>
         )}
       </div>

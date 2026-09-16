@@ -2,6 +2,7 @@
 
 import { motion, useInView, Variants } from "framer-motion";
 import { useRef } from "react";
+import Link from "next/link";
 
 const Footer = () => {
   const ref = useRef(null);
@@ -58,27 +59,12 @@ const Footer = () => {
             variants={staggerVariants}
             className="flex justify-center space-x-6 text-sm text-gray-500"
           >
-            <motion.a
-              whileHover={{ color: "#10B981", scale: 1.05 }}
-              href="#"
-              className="font-medium"
-            >
+            <Link href="/privacy" className="font-medium hover:text-green-600 transition-colors">
               Privacy
-            </motion.a>
-            <motion.a
-              whileHover={{ color: "#10B981", scale: 1.05 }}
-              href="#"
-              className="font-medium"
-            >
+            </Link>
+            <Link href="/terms" className="font-medium hover:text-green-600 transition-colors">
               Terms
-            </motion.a>
-            <motion.a
-              whileHover={{ color: "#10B981", scale: 1.05 }}
-              href="#"
-              className="font-medium"
-            >
-              Accessibility
-            </motion.a>
+            </Link>
           </motion.div>
         </motion.div>
       </div>
