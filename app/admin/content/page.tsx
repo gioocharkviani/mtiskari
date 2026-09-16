@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
-import { Save, RefreshCw, Globe, AlertCircle, CheckCircle } from "lucide-react";
+import { Save, RefreshCw, Globe, AlertCircle, CheckCircle, Plus, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1";
 
@@ -111,6 +111,169 @@ function validateFeatureJson(str: string): string | null {
   }
 }
 
+const FEATURE_ICONS = [
+  "bed", "snowflake", "mountain", "wifi", "car",
+  "flame", "utensils", "star", "shield", "sun", "bath",
+];
+
+interface FeatureCard {
+  title: string;
+  icon: string;
+  items: string[];
+}
+
+function parseFeatureCards(str: string): FeatureCard[] {
+  try {
+    const parsed = JSON.parse(str || "[]");
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((c) => ({
+      title: typeof c.title === "string" ? c.title : "",
+      icon: FEATURE_ICONS.includes(c.icon) ? c.icon : "bed",
+      items: Array.isArray(c.items) ? c.items.filter((i: unknown) => typeof i === "string") : [],
+    }));
+  } catch {
+    return [];
+  }
+}
+
+function FeatureCardsEditor({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (newValue: string) => void;
+}) {
+  const cards = parseFeatureCards(value);
+
+  const commit = (next: FeatureCard[]) => onChange(JSON.stringify(next, null, 2));
+
+  const updateCard = (index: number, patch: Partial<FeatureCard>) => {
+    const next = cards.map((c, i) => (i === index ? { ...c, ...patch } : c));
+    commit(next);
+  };
+
+  const addCard = () => commit([...cards, { title: "New Card", icon: "bed", items: [] }]);
+  const removeCard = (index: number) => commit(cards.filter((_, i) => i !== index));
+  const moveCard = (index: number, dir: -1 | 1) => {
+    const target = index + dir;
+    if (target < 0 || target >= cards.length) return;
+    const next = [...cards];
+    [next[index], next[target]] = [next[target], next[index]];
+    commit(next);
+  };
+
+  const addItem = (cardIndex: number) => {
+    updateCard(cardIndex, { items: [...cards[cardIndex].items, ""] });
+  };
+  const updateItem = (cardIndex: number, itemIndex: number, text: string) => {
+    const items = cards[cardIndex].items.map((it, i) => (i === itemIndex ? text : it));
+    updateCard(cardIndex, { items });
+  };
+  const removeItem = (cardIndex: number, itemIndex: number) => {
+    updateCard(cardIndex, { items: cards[cardIndex].items.filter((_, i) => i !== itemIndex) });
+  };
+
+  return (
+    <div className="space-y-4">
+      {cards.map((card, cardIndex) => (
+        <div key={cardIndex} className="border border-gray-200 rounded-xl p-4 bg-gray-50/50">
+          <div className="flex items-start gap-3 flex-wrap">
+            <div className="flex-1 min-w-[180px]">
+              <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Title</label>
+              <input
+                type="text"
+                value={card.title}
+                onChange={(e) => updateCard(cardIndex, { title: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="e.g. Rooms"
+              />
+            </div>
+            <div className="min-w-[160px]">
+              <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Icon</label>
+              <select
+                value={card.icon}
+                onChange={(e) => updateCard(cardIndex, { icon: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+              >
+                {FEATURE_ICONS.map((icon) => (
+                  <option key={icon} value={icon}>{icon}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-end gap-1 pb-0.5">
+              <button
+                type="button"
+                onClick={() => moveCard(cardIndex, -1)}
+                disabled={cardIndex === 0}
+                title="Move up"
+                className="p-2 text-gray-400 hover:text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronUp className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => moveCard(cardIndex, 1)}
+                disabled={cardIndex === cards.length - 1}
+                title="Move down"
+                className="p-2 text-gray-400 hover:text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => removeCard(cardIndex)}
+                title="Remove card"
+                className="p-2 text-red-400 hover:text-red-600"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-3">
+            <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5">Items</label>
+            <div className="space-y-2">
+              {card.items.map((item, itemIndex) => (
+                <div key={itemIndex} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={item}
+                    onChange={(e) => updateItem(cardIndex, itemIndex, e.target.value)}
+                    className="flex-1 px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="e.g. 2 Bedrooms"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeItem(cardIndex, itemIndex)}
+                    className="p-1.5 text-red-400 hover:text-red-600"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => addItem(cardIndex)}
+              className="mt-2 flex items-center gap-1 text-xs font-medium text-green-700 hover:text-green-800"
+            >
+              <Plus className="w-3.5 h-3.5" /> Add item
+            </button>
+          </div>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={addCard}
+        className="flex items-center gap-1.5 px-4 py-2 border border-dashed border-gray-300 rounded-xl text-sm font-medium text-gray-500 hover:text-green-700 hover:border-green-400 transition-colors"
+      >
+        <Plus className="w-4 h-4" /> Add card
+      </button>
+    </div>
+  );
+}
+
 export default function AdminContentPage() {
   const [content, setContent] = useState<ContentMap>({});
   const [edited, setEdited] = useState<ContentMap>({});
@@ -186,6 +349,7 @@ export default function AdminContentPage() {
 
   const featureCardsValue = edited["feature_cards"]?.[activeTab] ?? "";
   const featureCardsError = jsonErrors[`feature_cards_${activeTab}`];
+  const [showRawJson, setShowRawJson] = useState(false);
 
   return (
     <AdminShell>
@@ -239,49 +403,63 @@ export default function AdminContentPage() {
           <div className="space-y-6">
             {/* Feature Cards JSON editor */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="px-5 py-3 bg-gray-50 border-b border-gray-100">
-                <h2 className="font-semibold text-gray-800 text-sm">Feature Cards (Rooms / Amenities / Nature)</h2>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  JSON array — each card has <code className="bg-gray-200 px-1 rounded">title</code>,{" "}
-                  <code className="bg-gray-200 px-1 rounded">icon</code> (bed / snowflake / mountain / wifi / car / flame / utensils / star / shield / sun / bath),{" "}
-                  <code className="bg-gray-200 px-1 rounded">items</code> (string array)
-                </p>
+              <div className="px-5 py-3 bg-gray-50 border-b border-gray-100 flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  <h2 className="font-semibold text-gray-800 text-sm">Feature Cards (Rooms / Amenities / Nature)</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Add cards, pick an icon, and list their features below.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowRawJson((v) => !v)}
+                  className="text-xs font-medium text-gray-500 hover:text-gray-700 underline underline-offset-2"
+                >
+                  {showRawJson ? "Use card editor" : "Edit raw JSON"}
+                </button>
               </div>
               <div className="p-5">
-                <div className="relative">
-                  <textarea
-                    value={featureCardsValue}
-                    onChange={(e) => handleChange("feature_cards", activeTab, e.target.value)}
-                    rows={12}
-                    spellCheck={false}
-                    className={`w-full px-3 py-3 border rounded-xl text-sm font-mono focus:outline-none focus:ring-2 resize-y ${
-                      featureCardsError
-                        ? "border-red-300 focus:ring-red-400 bg-red-50"
-                        : "border-gray-200 focus:ring-green-500 bg-white"
-                    }`}
-                    placeholder={FEATURE_CARDS_EXAMPLE}
-                  />
-                  {featureCardsError && (
-                    <div className="mt-1.5 flex items-center gap-1.5 text-red-600 text-xs">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      {featureCardsError}
-                    </div>
-                  )}
-                  {!featureCardsError && featureCardsValue && (
-                    <div className="mt-1.5 flex items-center gap-1.5 text-green-600 text-xs">
-                      <CheckCircle className="w-3.5 h-3.5 shrink-0" />
-                      Valid JSON
-                    </div>
-                  )}
-                </div>
-                <details className="mt-3">
-                  <summary className="text-xs text-gray-400 cursor-pointer select-none hover:text-gray-600">
-                    Show format example
-                  </summary>
-                  <pre className="mt-2 bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs text-gray-600 overflow-x-auto">
+                {showRawJson ? (
+                  <div className="relative">
+                    <textarea
+                      value={featureCardsValue}
+                      onChange={(e) => handleChange("feature_cards", activeTab, e.target.value)}
+                      rows={12}
+                      spellCheck={false}
+                      className={`w-full px-3 py-3 border rounded-xl text-sm font-mono focus:outline-none focus:ring-2 resize-y ${
+                        featureCardsError
+                          ? "border-red-300 focus:ring-red-400 bg-red-50"
+                          : "border-gray-200 focus:ring-green-500 bg-white"
+                      }`}
+                      placeholder={FEATURE_CARDS_EXAMPLE}
+                    />
+                    {featureCardsError && (
+                      <div className="mt-1.5 flex items-center gap-1.5 text-red-600 text-xs">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        {featureCardsError}
+                      </div>
+                    )}
+                    {!featureCardsError && featureCardsValue && (
+                      <div className="mt-1.5 flex items-center gap-1.5 text-green-600 text-xs">
+                        <CheckCircle className="w-3.5 h-3.5 shrink-0" />
+                        Valid JSON
+                      </div>
+                    )}
+                    <details className="mt-3">
+                      <summary className="text-xs text-gray-400 cursor-pointer select-none hover:text-gray-600">
+                        Show format example
+                      </summary>
+                      <pre className="mt-2 bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs text-gray-600 overflow-x-auto">
 {FEATURE_CARDS_EXAMPLE}
-                  </pre>
-                </details>
+                      </pre>
+                    </details>
+                  </div>
+                ) : (
+                  <FeatureCardsEditor
+                    value={featureCardsValue}
+                    onChange={(next) => handleChange("feature_cards", activeTab, next)}
+                  />
+                )}
               </div>
             </div>
 
