@@ -1,20 +1,11 @@
 "use client";
 
 import HeroBooking from "../forms/HeroBooking";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
 
 const Hero = () => {
   const { t } = useContent();
-
-  const backgroundVariants: Variants = {
-    hidden: { scale: 1.1, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: { duration: 1, ease: "easeOut" },
-    },
-  };
 
   const overlayVariants = {
     hidden: { opacity: 0 },
@@ -26,12 +17,7 @@ const Hero = () => {
       id="hero"
       className="w-full flex justify-center min-h-screen relative"
     >
-      <motion.div
-        className="w-full h-full absolute hero-bg bg-position-[calc(100%+0px)_center]! bg-cover! md:bg-center! z-1"
-        variants={backgroundVariants}
-        initial="hidden"
-        animate="visible"
-      />
+      <div className="w-full h-full absolute hero-bg bg-position-[calc(100%+0px)_center]! bg-cover! md:bg-center! z-1" />
       <motion.div
         className="hero-bg-overlay absolute z-2"
         variants={overlayVariants}

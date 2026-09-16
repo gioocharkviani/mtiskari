@@ -8,7 +8,7 @@ const API = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001/api/v1"
 
 async function getSettings(): Promise<Record<string, string>> {
   try {
-    const res = await fetch(`${API}/settings`, { cache: "no-store" });
+    const res = await fetch(`${API}/settings`, { next: { revalidate: 60 } });
     if (!res.ok) return {};
     return await res.json();
   } catch {

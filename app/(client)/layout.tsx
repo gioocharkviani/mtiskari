@@ -5,7 +5,7 @@ import ClientLandingLayout from "@/components/layout/ClientLandingLayout";
 const SITE_URL = "https://mtiskari.ge";
 const SITE_NAME = "მთისკარი • Mtiskari";
 const DESCRIPTION =
-  "მთისკარი — კომფორტული საოჯახო კოტეჯები დასასვენებლად. დაჯავშნეთ თქვენი დასვენება ბუნებაში, საუკეთესო სერვისითა და ხედებით.";
+  "მთისკარი — კომფორტული საოჯახო კოტეჯები რაჭაში, სოფელ უწერაში. დაჯავშნეთ თქვენი დასვენება მთის ბუნებაში, საუკეთესო სერვისითა და ხედებით.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -21,6 +21,14 @@ export const metadata: Metadata = {
     "დასვენება",
     "cottages georgia",
     "საოჯახო კოტეჯი",
+    "რაჭა",
+    "racha georgia",
+    "racha cottages",
+    "უწერა",
+    "utsera racha",
+    "oni racha",
+    "დასვენება რაჭაში",
+    "სასტუმრო რაჭაში",
   ],
   authors: [{ name: "Mtiskari" }],
   alternates: {
@@ -93,6 +101,7 @@ export default function RootLayout({
   return (
     <html lang="ka">
       <head>
+        <link rel="preload" as="image" href="/hero-bg.jpg" fetchPriority="high" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
